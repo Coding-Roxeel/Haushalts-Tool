@@ -1,0 +1,23 @@
+# Secrets & Konfiguration
+.env
+
+# Datenbank (enthält echte Haushaltsdaten)
+
+*.db
+*.sqlite
+*.sqlite3
+
+# Python (Backend)
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node/Angular (Frontend)
+node_modules/
+dist/
+.angular/
+
+# Editor/OS
+.vscode/
+Thumbs.db
