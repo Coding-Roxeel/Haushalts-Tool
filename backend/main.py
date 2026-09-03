@@ -3,11 +3,19 @@ from database import Base, engine, get_db
 import models
 from sqlalchemy.orm import Session
 import schemas
+from fastapi.middleware.cors import CORSMiddleware
 
 
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
