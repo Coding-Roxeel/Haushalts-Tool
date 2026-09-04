@@ -47,3 +47,21 @@ def create_schicht_vorlage(vorlage: schemas.SchichtVorlageCreate, db: Session = 
 @app.get("/schicht-vorlagen", response_model=list[schemas.SchichtVorlageOut])
 def list_schicht_vorlagen(db: Session = Depends(get_db)):
     return db.query(models.SchichtVorlage).all()
+
+@app.post("/schichten", response_model=schemas.SchichtOut)
+def create_schicht(schicht: schemas.SchichtCreate, db: Session = Depends(get_db)):
+    neue_schicht = models.Schicht(
+        person_id=schicht.person_id,
+        datum=schicht.datum,
+        start=schicht.start,
+        ende=schicht.ende,
+        vorlage_id=schicht.vorlage_id,
+    )
+    db.add(neue_schicht)
+    db.commit()
+    db.refresh(neue_schicht)
+    return neue_schicht
+
+@app.get("/schichten", response_model=list[schemas.SchichtOut])
+def list_schichten(db:Session = Depends(get_db)):
+    return db.query(models.Schicht).all()

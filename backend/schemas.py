@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from datetime import time
+from datetime import time, date
+from typing import Optional
 
 
 
@@ -25,6 +26,24 @@ class SchichtVorlageOut(BaseModel):
     name: str
     start: time
     ende: time 
+
+    class Config:
+        from_attributes = True
+
+class SchichtCreate(BaseModel):
+    person_id: int
+    datum: date
+    start: time
+    ende: time
+    vorlage_id: Optional[int] = None
+
+class SchichtOut(BaseModel):
+    id: int
+    person_id: int
+    datum: date
+    start: time
+    ende: time
+    vorlage_id: Optional[int] = None
 
     class Config:
         from_attributes = True

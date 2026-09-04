@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Time
+from sqlalchemy import Column, Integer, String, Time, Date, ForeignKey
 from database import Base
 
 
@@ -17,3 +17,13 @@ class SchichtVorlage(Base):
     name = Column(String, nullable=False)
     start = Column(Time, nullable=False)
     ende = Column(Time, nullable=False)
+
+class Schicht(Base):
+    __tablename__ = "schichten"
+
+    id = Column(Integer, primary_key=True, index=True)
+    person_id = Column(Integer, ForeignKey("personen.id"), nullable=False)
+    datum = Column(Date, nullable=False)
+    start = Column(Time, nullable=False)
+    ende = Column(Time, nullable=False)
+    vorlage_id = Column(Integer, ForeignKey("schicht_vorlagen.id"), nullable=True)
