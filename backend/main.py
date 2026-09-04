@@ -65,3 +65,19 @@ def create_schicht(schicht: schemas.SchichtCreate, db: Session = Depends(get_db)
 @app.get("/schichten", response_model=list[schemas.SchichtOut])
 def list_schichten(db:Session = Depends(get_db)):
     return db.query(models.Schicht).all()
+
+@app.post("/termine", response_model=schemas.TerminOut)
+def create_termin(termin: schemas.TerminCreate, db: Session = Depends(get_db)):
+    neuer_termin = models.Termin(
+        person_id=termin.person_id,
+        titel=termin.titel,
+        datum_zeit=termin.datum_zeit,
+    )
+    db.add(neuer_termin)
+    db.commit()
+    db.refresh(neuer_termin)
+    return neuer_termin
+
+@app.get("/termine", response_model=list[schemas.TerminOut])
+def list_termine(db: Session = Depends(get_db)):
+    return db.query(models.Termin).all()

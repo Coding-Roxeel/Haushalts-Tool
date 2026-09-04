@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import time, date
+from datetime import time, date, datetime
 from typing import Optional
 
 
@@ -44,6 +44,20 @@ class SchichtOut(BaseModel):
     start: time
     ende: time
     vorlage_id: Optional[int] = None
+
+    class Config:
+        from_attributes = True
+
+class TerminCreate(BaseModel):
+    person_id: int
+    titel: str
+    datum_zeit: datetime
+
+class TerminOut(BaseModel):
+    id: int
+    person_id: int
+    titel: str
+    datum_zeit: datetime
 
     class Config:
         from_attributes = True
