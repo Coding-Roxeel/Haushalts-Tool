@@ -52,12 +52,14 @@ class TerminCreate(BaseModel):
     person_id: int
     titel: str
     datum_zeit: datetime
+    ende_zeit: datetime
 
 class TerminOut(BaseModel):
     id: int
     person_id: int
     titel: str
     datum_zeit: datetime
+    ende_zeit: datetime
 
     class Config:
         from_attributes = True

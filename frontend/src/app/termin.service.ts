@@ -6,6 +6,7 @@ export interface Termin {
     person_id: number;
     titel: string;
     datum_zeit: string,
+    ende_zeit: string,
 }
 
 @Service()

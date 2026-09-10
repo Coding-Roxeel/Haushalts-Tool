@@ -35,3 +35,4 @@ class Termin(Base):
     person_id = Column(Integer, ForeignKey("personen.id"), nullable=False)
     titel = Column(String, nullable=False)
     datum_zeit = Column(DateTime, nullable=False)
+    ende_zeit = Column(DateTime, nullable=False)

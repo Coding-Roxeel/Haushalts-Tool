@@ -72,6 +72,7 @@ def create_termin(termin: schemas.TerminCreate, db: Session = Depends(get_db)):
     neuer_termin = models.Termin(
         person_id=termin.person_id,
         titel=termin.titel,
+        ende_zeit=termin.ende_zeit,
         datum_zeit=termin.datum_zeit,
     )
     db.add(neuer_termin)
@@ -175,6 +176,7 @@ def update_termin(termin_id: int, termin: schemas.TerminCreate, db: Session = De
     db_termin.person_id = termin.person_id
     db_termin.titel = termin.titel
     db_termin.datum_zeit = termin.datum_zeit
+    db_termin.ende_zeit = termin.ende_zeit
     try:
         db.commit()
     except IntegrityError:
