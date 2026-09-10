@@ -1,6 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PersonService } from './person.service';
 
 @Component({
   imports: [RouterOutlet],
@@ -10,5 +9,4 @@ import { PersonService } from './person.service';
 })
 export class App {
   protected readonly title = signal('frontend');
-  protected personService = inject(PersonService);
 }

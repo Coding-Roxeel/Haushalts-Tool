@@ -1,0 +1,23 @@
+@for (person of personService.personen.value(); track person.id) {
+    <div class="person-karte" [style.border-color]="person.farbe">
+        <h2 [style.color]="person.farbe">{{ person.name }}</h2>
+
+        <h3>Schichten</h3>
+        <ul>
+            @for (schicht of schichtService.schichten.value(); track schicht.id) {
+                @if (schicht.person_id === person.id) {
+                    <li>{{ schicht.datum }}: {{ schicht.start }} - {{ schicht.ende }}</li>
+                }
+            }
+        </ul>
+
+        <h3>Termine</h3>
+        <ul>
+            @for (termin of terminService.termine.value(); track termin.id) {
+                @if (termin.person_id === person.id) {
+                    <li>{{ termin.datum_zeit }}: {{ termin.titel }}</li>
+                }
+            }
+        </ul>
+    </div>
+}

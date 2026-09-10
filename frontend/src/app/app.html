@@ -1,18 +1,3 @@
 <h1>Bärenhöhle Haushalts-Tool</h1>
 
-<h2>Personen</h2>
-
-
-@if (personService.personen.isLoading()) {
-  <p>Lädt...</p>
-} @else if (personService.personen.error()) {
-  <p>Fehler beim Laden der Personen.</p>
-} @else {
-  <ul>
-    @for (person of personService.personen.value(); track person.id) {
-      <li [style.color]="person.farbe">{{ person.name }}</li>
-    }
-  </ul>
-}
-
 <router-outlet />
