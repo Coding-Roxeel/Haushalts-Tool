@@ -1,0 +1,54 @@
+.person-karte {
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 1rem;
+    width:300px;
+}
+
+.zeitachse-fenster {
+    height: 240px;
+    overflow-y: auto;
+    position: relative;
+    border: 1px solid #ccc;
+}
+
+.zeitachse-24h {
+    position: relative;
+    height: 1440px;
+}
+
+.ereignis-linie {
+    position: absolute;
+    left: 0;
+    width: 4px;
+    min-height: 4px;
+    border-radius: 2px;
+}
+
+.ereignis-karte {
+    position: absolute;
+    width: 140px;
+    height: 30px;
+    padding: 0 0.5rem;
+    display:flex;
+    align-items: center;
+    background: white;
+    border-left: 4px solid;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.ereignis-karte:hover {
+    z-index: 50 !important;
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.ereignis-text {
+    min-width: 0;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

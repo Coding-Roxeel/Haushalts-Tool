@@ -1,23 +1,27 @@
-@for (person of personService.personen.value(); track person.id) {
+@for (person of personService.personen.value();track person.id) {
     <div class="person-karte" [style.border-color]="person.farbe">
-        <h2 [style.color]="person.farbe">{{ person.name }}</h2>
+        <h2 [style.color]="person.farbe"> {{ person.name }}</h2>
 
-        <h3>Schichten</h3>
-        <ul>
-            @for (schicht of schichtService.schichten.value(); track schicht.id) {
-                @if (schicht.person_id === person.id) {
-                    <li>{{ schicht.datum }}: {{ schicht.start }} - {{ schicht.ende }}</li>
+        <div class="zeitachse-fenster">
+            <div class="zeitachse-24h">
+                @for (ereignis of ereignisseFuerPerson(person.id); track ereignis.titel + ereignis.startMinuten) {
+                    <div
+                        class="ereignis-linie"
+                        [style.top.px]="ereignis.startMinuten"
+                        [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
+                        [style.background]="person.farbe"
+                    ></div>
+                    <div
+                        class="ereignis-karte"
+                        [style.top.px]="ereignis.startMinuten"
+                        [style.left.px]="12 + ereignis.stapelPosition * 70"
+                        [style.z-index]="ereignis.stapelPosition + 1"
+                        [style.border-left-color]="person.farbe"
+                    >
+                        <span class=" ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+                    </div>
                 }
-            }
-        </ul>
-
-        <h3>Termine</h3>
-        <ul>
-            @for (termin of terminService.termine.value(); track termin.id) {
-                @if (termin.person_id === person.id) {
-                    <li>{{ termin.datum_zeit }}: {{ termin.titel }}</li>
-                }
-            }
-        </ul>
+            </div>
+        </div>
     </div>
 }
