@@ -52,3 +52,26 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.stunden-linie {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.stunden-label {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 0.7rem;
+    color: #777;
+}
+
+.ereignisse {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 44px;
+    right: 0;
+}

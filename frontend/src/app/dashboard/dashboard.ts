@@ -3,6 +3,7 @@ import { PersonService } from "../person.service";
 import { SchichtService } from "../schicht.service";
 import { TerminService } from "../termin.service";
 
+
 const KARTEN_HOEHE = 30;
 export interface Ereignis {
   titel: string;
@@ -23,6 +24,7 @@ export class Dashboard {
   protected personService = inject(PersonService);
   protected schichtService = inject(SchichtService);
   protected terminService = inject(TerminService);
+  protected readonly stunden = Array.from({ length: 24 },(_, i) => i);
 
   zeitZuMinuten(zeit: string): number {
     const [stunden, minuten] = zeit.split(":").map(Number);
