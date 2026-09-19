@@ -1,4 +1,4 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { PersonService } from "../person.service";
 import { SchichtService } from "../schicht.service";
 import { TerminService } from "../termin.service";
@@ -25,6 +25,7 @@ export class Dashboard {
   protected schichtService = inject(SchichtService);
   protected terminService = inject(TerminService);
   protected readonly stunden = Array.from({ length: 24 },(_, i) => i);
+  protected readonly tagOffset = signal(0);
 
   zeitZuMinuten(zeit: string): number {
     const [stunden, minuten] = zeit.split(":").map(Number);
@@ -42,6 +43,14 @@ export class Dashboard {
     return `${stunden.toString().padStart(2, "0")}:${rest.toString().padStart(2, "0")}`;
   }
 
+  angezeigterTag(): string {
+    const tag = new Date();
+    tag.setDate(tag.getDate() + this.tagOffset());
+    const monat = String(tag.getMonth() + 1).padStart(2, "0");
+    const tagImMonat = String(tag.getDate()).padStart(2, "0");
+    return `${tag.getFullYear()}-${monat}-${tagImMonat}`;
+  }
+
   ueberlappen(
     a: { startMinuten: number; endeMinuten: number },
     b: { startMinuten: number; endeMinuten: number },
@@ -52,9 +61,10 @@ export class Dashboard {
   } 
 
   ereignisseFuerPerson(personId: number): Ereignis[] {
+    const tag = this.angezeigterTag();
     const schichtEreignisse = this.schichtService.schichten
     .value()
-    .filter((s) => s.person_id === personId)
+    .filter((s) => s.person_id === personId && s.datum === tag)
     .map((s) =>({
       titel: "Schicht",
       startMinuten: this.zeitZuMinuten(s.start),
@@ -65,7 +75,7 @@ export class Dashboard {
 
     const terminEreignisse = this.terminService.termine
       .value()
-      .filter((t) => t.person_id === personId)
+      .filter((t) => t.person_id === personId && t.datum_zeit.startsWith(tag))
       .map((t) => {
         const startMinuten = this.datumZeitZuMinuten(t.datum_zeit);
         const endeMinuten = this.datumZeitZuMinuten(t.ende_zeit);
