@@ -1,3 +1,18 @@
+<div class="tag-umschalter">
+    <span [class.aktiv-label]="tagOffset() === 0">Heute</span>
+    <button
+        type="button"
+        role="switch"
+        class="schalter"
+        aria-label="Zwischen heute und morgen umschalten"
+        [class.morgen]="tagOffset() === 1"
+        [attr.aria-checked]="tagOffset() === 1"
+        (click)="tagOffset.set(tagOffset() === 0 ? 1 : 0)"
+    ></button>
+    <span [class.aktiv-label]="tagOffset() === 1">Morgen</span>
+    <span class="tag-datum"> {{ angezeigterTagText() }}</span>
+</div>
+
 @for (person of personService.personen.value();track person.id) {
     <div class="person-karte" [style.border-color]="person.farbe">
         <h2 [style.color]="person.farbe"> {{ person.name }}</h2>

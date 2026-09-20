@@ -51,6 +51,11 @@ export class Dashboard {
     return `${tag.getFullYear()}-${monat}-${tagImMonat}`;
   }
 
+  angezeigterTagText(): string {
+    const [jahr, monat, tag] = this.angezeigterTag().split("-");
+    return `${tag}.${monat}.${jahr}`;
+  }
+
   ueberlappen(
     a: { startMinuten: number; endeMinuten: number },
     b: { startMinuten: number; endeMinuten: number },
