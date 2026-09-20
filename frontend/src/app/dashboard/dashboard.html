@@ -39,14 +39,16 @@
                                     [style.left.px]="ereignis.linieLinks"
                                     [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
                                     [style.background]="ereignis.farbe"
+                                    (mouseenter)="lauftextMessen($event)"
                                 ></div>
                                 <div
                                     class="ereignis-karte"
                                     [style.margin-left.px]="ereignis.karteLinks"
                                     [style.z-index]="ereignis.stapelPosition + 1"
                                     [style.border-left-color]="ereignis.farbe"
+                                    (mouseenter)="lauftextMessen($event)"
                                 >
-                                    <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+                                    <span class="ereignis-text"><span class="ereignis-text-inhalt">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span></span>
                                 </div>
                             </div>
                         }

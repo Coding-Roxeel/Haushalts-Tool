@@ -78,6 +78,17 @@ export class Dashboard {
     this.scrollPositionen.update((alt) => ({ ...alt, [personId]: oben }));
   }
 
+  lauftextMessen(ereignis: MouseEvent): void{
+    const kasten = (ereignis.currentTarget as HTMLElement).closest(".ereignis");
+    const text = kasten?.querySelector<HTMLElement>(".ereignis-text");
+    if (!text) {
+      return;
+    }
+    const zuviel = Math.max(0, text.scrollWidth - text.clientWidth);
+    text.style.setProperty("--lauf", `${zuviel}px`);
+    text.style.setProperty("--lauf-dauer", `${Math.max(2, zuviel / 30)}s`);
+  }
+
   bereichHoehe(e: Zeitspanne): number {
     return Math.max(e.endeMinuten - e.startMinuten, KARTEN_HOEHE);
   }

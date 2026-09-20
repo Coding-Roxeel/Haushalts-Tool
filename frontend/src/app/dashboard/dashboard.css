@@ -153,3 +153,23 @@
 .ereignisse:has(.ereignis:hover) .ereignis:not(:hover) > * {
     opacity: 0.35;
 }
+
+@keyframes lauftext {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-1 * var(--lauf, 0px)));
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .ereignis:hover .ereignis-text {
+        text-overflow: clip;
+    }
+
+    .ereignis:hover .ereignis-text-inhalt {
+        display: inline-block;
+        animation: lauftext var(--lauf-dauer, 3s) ease-in-out infinite alternate;
+    }
+}
