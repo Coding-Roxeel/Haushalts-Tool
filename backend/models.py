@@ -17,6 +17,8 @@ class SchichtVorlage(Base):
     name = Column(String, nullable=False)
     start = Column(Time, nullable=False)
     ende = Column(Time, nullable=False)
+    kuerzel = Column(String, nullable=True)
+    farbe = Column(String, nullable=False)
 
 class Schicht(Base):
     __tablename__ = "schichten"
@@ -27,6 +29,9 @@ class Schicht(Base):
     start = Column(Time, nullable=False)
     ende = Column(Time, nullable=False)
     vorlage_id = Column(Integer, ForeignKey("schicht_vorlagen.id"), nullable=True)
+    titel = Column(String, nullable=False)
+    kuerzel = Column(String, nullable=True)
+    farbe = Column(String, nullable=False)
 
 class Termin(Base):
     __tablename__ = "termine"
@@ -36,3 +41,4 @@ class Termin(Base):
     titel = Column(String, nullable=False)
     datum_zeit = Column(DateTime, nullable=False)
     ende_zeit = Column(DateTime, nullable=False)
+    farbe = Column(String, nullable=False)

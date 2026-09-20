@@ -39,7 +39,13 @@ def list_personen(db: Session = Depends(get_db)):
 
 @app.post("/schicht-vorlagen", response_model=schemas.SchichtVorlageOut)
 def create_schicht_vorlage(vorlage: schemas.SchichtVorlageCreate, db: Session = Depends(get_db)):
-    neue_vorlage = models.SchichtVorlage(name=vorlage.name, start=vorlage.start, ende=vorlage.ende)
+    neue_vorlage = models.SchichtVorlage(
+        name=vorlage.name,
+        start=vorlage.start,
+        ende=vorlage.ende,
+        kuerzel=vorlage.kuerzel,
+        farbe=vorlage.farbe,
+    )
     db.add(neue_vorlage)
     db.commit()
     db.refresh(neue_vorlage)
@@ -57,6 +63,9 @@ def create_schicht(schicht: schemas.SchichtCreate, db: Session = Depends(get_db)
         start=schicht.start,
         ende=schicht.ende,
         vorlage_id=schicht.vorlage_id,
+        titel=schicht.titel,
+        kuerzel=schicht.kuerzel,
+        farbe=schicht.farbe,
     )
     db.add(neue_schicht)
     db.commit()
@@ -74,6 +83,7 @@ def create_termin(termin: schemas.TerminCreate, db: Session = Depends(get_db)):
         titel=termin.titel,
         ende_zeit=termin.ende_zeit,
         datum_zeit=termin.datum_zeit,
+        farbe=termin.farbe,
     )
     db.add(neuer_termin)
     db.commit()
@@ -123,6 +133,8 @@ def update_schicht_vorlage(vorlage_id: int, vorlage: schemas.SchichtVorlageCreat
     db_vorlage.name = vorlage.name
     db_vorlage.start = vorlage.start
     db_vorlage.ende = vorlage.ende
+    db_vorlage.kuerzel = vorlage.kuerzel
+    db_vorlage.farbe = vorlage.farbe
     db.commit()
     db.refresh(db_vorlage)
     return db_vorlage
@@ -149,6 +161,9 @@ def update_schicht(schicht_id: int, schicht: schemas.SchichtCreate, db: Session 
     db_schicht.start = schicht.start
     db_schicht.ende = schicht.ende
     db_schicht.vorlage_id = schicht.vorlage_id
+    db_schicht.titel = schicht.titel
+    db_schicht.kuerzel = schicht.kuerzel
+    db_schicht.farbe = schicht.farbe
     try:
         db.commit()
     except IntegrityError:
@@ -177,6 +192,7 @@ def update_termin(termin_id: int, termin: schemas.TerminCreate, db: Session = De
     db_termin.titel = termin.titel
     db_termin.datum_zeit = termin.datum_zeit
     db_termin.ende_zeit = termin.ende_zeit
+    db_termin.farbe = termin.farbe
     try:
         db.commit()
     except IntegrityError:
