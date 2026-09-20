@@ -65,14 +65,10 @@ export class Dashboard {
     return Math.max(0, fruehester - 30);
   }
 
-  ueberlappen(
-    a: { startMinuten: number; endeMinuten: number },
-    b: { startMinuten: number; endeMinuten: number },
-  ): boolean {
-    const aEnde = Math.max(a.endeMinuten, a.startMinuten + KARTEN_HOEHE);
-    const bEnde = Math.max(b.endeMinuten, b.startMinuten + KARTEN_HOEHE);
-    return a.startMinuten < bEnde && b.startMinuten < aEnde;
-  } 
+  ueberlappen(a: { startMinuten: number; }, b: { startMinuten: number }): boolean {
+      return a.startMinuten < b.startMinuten + KARTEN_HOEHE && b.startMinuten < a.startMinuten + KARTEN_HOEHE;
+    }
+  
 
   ereignisseFuerPerson(personId: number): Ereignis[] {
     const tag = this.angezeigterTag();
