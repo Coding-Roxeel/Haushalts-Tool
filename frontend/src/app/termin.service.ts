@@ -7,6 +7,7 @@ export interface Termin {
     titel: string;
     datum_zeit: string,
     ende_zeit: string,
+    farbe: string;
 }
 
 @Service()

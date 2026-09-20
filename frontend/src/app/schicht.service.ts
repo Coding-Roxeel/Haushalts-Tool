@@ -7,10 +7,13 @@ export interface Schicht {
     datum: string;
     start: string;
     ende: string;
-    vorlage_id: number | null
+    titel: string;
+    kuerzel: string | null;
+    farbe: string;
+    vorlage_id: number | null;
 }
 
 @Service()
 export class SchichtService {
-    schichten = httpResource<Schicht[]>(() => "http://127.0.0.1:8000/schichten", {defaultValue: [] });
+    schichten = httpResource<Schicht[]>(() => "http://127.0.0.1:8000/schichten", { defaultValue: [] });
 }

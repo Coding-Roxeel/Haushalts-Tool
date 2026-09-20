@@ -32,15 +32,16 @@
                             <div
                                 class="ereignis-linie"
                                 [style.top.px]="ereignis.startMinuten"
+                                [style.left.px]="ereignis.linieLinks"
                                 [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
-                                [style.background]="person.farbe"
+                                [style.background]="ereignis.farbe"
                             ></div>
                             <div
                                 class="ereignis-karte"
                                 [style.top.px]="ereignis.startMinuten"
-                                [style.left.px]="12 + ereignis.stapelPosition * 70"
+                                [style.left.px]="ereignis.karteLinks"
                                 [style.z-index]="ereignis.stapelPosition + 1"
-                                [style.border-left-color]="person.farbe"
+                                [style.border-left-color]="ereignis.farbe"
                             >
                                 <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
                             </div>

@@ -6,13 +6,22 @@ import { ScrollZiel } from "./scroll-ziel.directive";
 
 
 const KARTEN_HOEHE = 30;
+const LINIEN_MIN = 4;
+const SPUR_ABSTAND = 6;
+const KARTEN_RAND = 8;
+const KARTEN_VERSATZ = 70;
+
+type Zeitspanne = { startMinuten: number; endeMinuten: number };
 export interface Ereignis {
   titel: string;
   startMinuten: number;
   endeMinuten: number;
   startText: string;
   endeText:string;
+  farbe: string;
   stapelPosition: number;
+  linieLinks: number;
+  karteLinks: number;
 }
 
 @Component({
@@ -69,6 +78,32 @@ export class Dashboard {
       return a.startMinuten < b.startMinuten + KARTEN_HOEHE && b.startMinuten < a.startMinuten + KARTEN_HOEHE;
     }
   
+dauerUeberlappt(a: Zeitspanne, b: Zeitspanne): boolean {
+  const aEnde = Math.max(a.endeMinuten, a.startMinuten + LINIEN_MIN);
+  const bEnde = Math.max(b.endeMinuten, b.startMinuten + LINIEN_MIN);
+  return a.startMinuten < bEnde && b.startMinuten < aEnde;
+}
+
+freiePositionen(
+  sortiert: Zeitspanne[],
+  kollidieren: (a: Zeitspanne,b: Zeitspanne) => boolean,
+): number[] {
+  const positionen: number[] = [];
+  for (let i = 0; i < sortiert.length; i++) {
+    const belegt: number[] = [];
+    for (let j = 0; j < i; j++) {
+      if (kollidieren(sortiert[j], sortiert[i])) {
+        belegt.push(positionen[j]);
+      }
+    }
+    let position = 0;
+    while (belegt.includes(position)) {
+      position++;
+    }
+    positionen.push(position);
+  }
+  return positionen;
+}
 
   ereignisseFuerPerson(personId: number): Ereignis[] {
     const tag = this.angezeigterTag();
@@ -76,7 +111,8 @@ export class Dashboard {
     .value()
     .filter((s) => s.person_id === personId && s.datum === tag)
     .map((s) =>({
-      titel: "Schicht",
+      titel: s.titel,
+      farbe: s.farbe,
       startMinuten: this.zeitZuMinuten(s.start),
       endeMinuten: this.zeitZuMinuten(s.ende),
       startText: this.minutenZuText(this.zeitZuMinuten(s.start)),
@@ -91,6 +127,7 @@ export class Dashboard {
         const endeMinuten = this.datumZeitZuMinuten(t.ende_zeit);
         return {
           titel: t.titel,
+          farbe: t.farbe,
           startMinuten,
           endeMinuten,
           startText: this.minutenZuText(startMinuten),
@@ -101,22 +138,15 @@ export class Dashboard {
     const alle = [...schichtEreignisse, ...terminEreignisse];
 
     const sortiert = [...alle].sort((a, b) => a.startMinuten - b.startMinuten);
-    const positionen: number[] = [];
+    const stapel = this.freiePositionen(sortiert, (a, b) => this.ueberlappen(a,b));
+    const spuren = this.freiePositionen(sortiert, (a, b) => this.dauerUeberlappt(a, b));
+    const spurenBreite = (spuren.length === 0 ? 0 : Math.max(...spuren) + 1) * SPUR_ABSTAND;
 
-    for (let i = 0; i < sortiert.length; i++) {
-      const belegt: number[] = [];
-      for (let j = 0; j < i; j++) {
-        if (this.ueberlappen(sortiert[j],sortiert[i])) {
-          belegt.push(positionen[j]);
-        }
-      }
-      let position = 0;
-      while (belegt.includes(position)) {
-        position++;
-      }
-      positionen.push(position);
-    }
-
-    return sortiert.map((ereignis, i) => ({ ...ereignis, stapelPosition: positionen[i] }))
-  }
+    return sortiert.map((ereignis, i) => ({
+      ...ereignis,
+      stapelPosition: stapel[i],
+      linieLinks: spuren[i] * SPUR_ABSTAND,
+      karteLinks: spurenBreite + KARTEN_RAND + stapel[i] * KARTEN_VERSATZ,
+    }));
+  } 
 }

@@ -6,6 +6,8 @@ export interface SchichtVorlage {
     name: string;
     start: string;
     ende: string;
+    kuerzel: string | null;
+    farbe: string;
 }
 
 @Service()
