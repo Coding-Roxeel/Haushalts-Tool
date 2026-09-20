@@ -2,6 +2,7 @@ import { Component, inject, signal } from "@angular/core";
 import { PersonService } from "../person.service";
 import { SchichtService } from "../schicht.service";
 import { TerminService } from "../termin.service";
+import { ScrollZiel } from "./scroll-ziel.directive";
 
 
 const KARTEN_HOEHE = 30;
@@ -15,7 +16,7 @@ export interface Ereignis {
 }
 
 @Component({
-  imports: [],
+  imports: [ScrollZiel],
   selector: "app-dashboard",
   styleUrl: "./dashboard.css",
   templateUrl: "./dashboard.html",
@@ -54,6 +55,14 @@ export class Dashboard {
   angezeigterTagText(): string {
     const [jahr, monat, tag] = this.angezeigterTag().split("-");
     return `${tag}.${monat}.${jahr}`;
+  }
+
+  scrollZielFuer(ereignisse: Ereignis[]): number {
+    if (ereignisse.length === 0) {
+      return 0;
+    }
+    const fruehester = Math.min(...ereignisse.map((e) => e.startMinuten));
+    return Math.max(0, fruehester - 30);
   }
 
   ueberlappen(

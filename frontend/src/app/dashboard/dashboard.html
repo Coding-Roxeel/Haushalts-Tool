@@ -13,37 +13,41 @@
     <span class="tag-datum"> {{ angezeigterTagText() }}</span>
 </div>
 
-@for (person of personService.personen.value();track person.id) {
-    <div class="person-karte" [style.border-color]="person.farbe">
-        <h2 [style.color]="person.farbe"> {{ person.name }}</h2>
+<div class="personen-liste">
+    @for (person of personService.personen.value();track person.id) {
+        <div class="person-karte" [style.border-color]="person.farbe">
+            <h2 [style.color]="person.farbe"> {{ person.name }}</h2>
 
-        <div class="zeitachse-fenster">
-            <div class="zeitachse-24h">
-                @for (stunde of stunden; track stunde) {
-                    <div class="stunden-linie" [style.top.px]="stunde * 60">
-                        <span class="stunden-label">{{ minutenZuText(stunde * 60) }}</span>
-                    </div>
-                }
-                <div class="ereignisse">
-                    @for (ereignis of ereignisseFuerPerson(person.id); track ereignis.titel + ereignis.startMinuten) {
-                        <div
-                            class="ereignis-linie"
-                            [style.top.px]="ereignis.startMinuten"
-                            [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
-                            [style.background]="person.farbe"
-                        ></div>
-                        <div
-                            class="ereignis-karte"
-                            [style.top.px]="ereignis.startMinuten"
-                            [style.left.px]="12 + ereignis.stapelPosition * 70"
-                            [style.z-index]="ereignis.stapelPosition + 1"
-                            [style.border-left-color]="person.farbe"
-                        >
-                            <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+            @let ereignisse = ereignisseFuerPerson(person.id);
+
+            <div class="zeitachse-fenster" [appScrollZiel]="scrollZielFuer(ereignisse)">
+                <div class="zeitachse-24h">
+                    @for (stunde of stunden; track stunde) {
+                        <div class="stunden-linie" [style.top.px]="stunde * 60">
+                            <span class="stunden-label">{{ minutenZuText(stunde * 60) }}</span>
                         </div>
                     }
+                    <div class="ereignisse">
+                        @for (ereignis of ereignisse; track ereignis.titel + ereignis.startMinuten) {
+                            <div
+                                class="ereignis-linie"
+                                [style.top.px]="ereignis.startMinuten"
+                                [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
+                                [style.background]="person.farbe"
+                            ></div>
+                            <div
+                                class="ereignis-karte"
+                                [style.top.px]="ereignis.startMinuten"
+                                [style.left.px]="12 + ereignis.stapelPosition * 70"
+                                [style.z-index]="ereignis.stapelPosition + 1"
+                                [style.border-left-color]="person.farbe"
+                            >
+                                <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
+</div>
