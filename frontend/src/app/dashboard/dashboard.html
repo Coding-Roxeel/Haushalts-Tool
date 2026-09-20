@@ -18,9 +18,9 @@
         <div class="person-karte" [style.border-color]="person.farbe">
             <h2 [style.color]="person.farbe"> {{ person.name }}</h2>
 
-            @let ereignisse = ereignisseFuerPerson(person.id);
+            @let ereignisse = ereignisseFuerPerson(person.id, scrollPositionFuer(person.id));
 
-            <div class="zeitachse-fenster" [appScrollZiel]="scrollZielFuer(ereignisse)">
+            <div class="zeitachse-fenster" [appScrollZiel]="scrollZielFuer(ereignisse)" (scroll)="scrollGeandert(person.id, $event)">
                 <div class="zeitachse-24h">
                     @for (stunde of stunden; track stunde) {
                         <div class="stunden-linie" [style.top.px]="stunde * 60">
@@ -30,20 +30,24 @@
                     <div class="ereignisse">
                         @for (ereignis of ereignisse; track ereignis.titel + ereignis.startMinuten) {
                             <div
-                                class="ereignis-linie"
+                                class="ereignis"
                                 [style.top.px]="ereignis.startMinuten"
-                                [style.left.px]="ereignis.linieLinks"
-                                [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
-                                [style.background]="ereignis.farbe"
-                            ></div>
-                            <div
-                                class="ereignis-karte"
-                                [style.top.px]="ereignis.startMinuten"
-                                [style.left.px]="ereignis.karteLinks"
-                                [style.z-index]="ereignis.stapelPosition + 1"
-                                [style.border-left-color]="ereignis.farbe"
+                                [style.height.px]="ereignis.bereichHoehe"
                             >
-                                <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+                                <div
+                                    class="ereignis-linie"
+                                    [style.left.px]="ereignis.linieLinks"
+                                    [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
+                                    [style.background]="ereignis.farbe"
+                                ></div>
+                                <div
+                                    class="ereignis-karte"
+                                    [style.margin-left.px]="ereignis.karteLinks"
+                                    [style.z-index]="ereignis.stapelPosition + 1"
+                                    [style.border-left-color]="ereignis.farbe"
+                                >
+                                    <span class="ereignis-text">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span>
+                                </div>
                             </div>
                         }
                     </div>

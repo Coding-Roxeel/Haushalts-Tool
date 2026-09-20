@@ -9,7 +9,8 @@ const KARTEN_HOEHE = 30;
 const LINIEN_MIN = 4;
 const SPUR_ABSTAND = 6;
 const KARTEN_RAND = 8;
-const KARTEN_VERSATZ = 70;
+const KARTEN_VERSATZ = 25;
+const STICKY_OBEN = 2;
 
 type Zeitspanne = { startMinuten: number; endeMinuten: number };
 export interface Ereignis {
@@ -22,6 +23,7 @@ export interface Ereignis {
   stapelPosition: number;
   linieLinks: number;
   karteLinks: number;
+  bereichHoehe: number;
 }
 
 @Component({
@@ -36,6 +38,7 @@ export class Dashboard {
   protected terminService = inject(TerminService);
   protected readonly stunden = Array.from({ length: 24 },(_, i) => i);
   protected readonly tagOffset = signal(0);
+  protected readonly scrollPositionen = signal<Record<number, number>>({});
 
   zeitZuMinuten(zeit: string): number {
     const [stunden, minuten] = zeit.split(":").map(Number);
@@ -64,6 +67,25 @@ export class Dashboard {
   angezeigterTagText(): string {
     const [jahr, monat, tag] = this.angezeigterTag().split("-");
     return `${tag}.${monat}.${jahr}`;
+  }
+
+  scrollPositionFuer(personId: number): number {
+    return this.scrollPositionen()[personId] ?? 0;
+  }
+
+  scrollGeandert(personId:number, ereignis: Event): void {
+    const oben = (ereignis.target as HTMLElement).scrollTop;
+    this.scrollPositionen.update((alt) => ({ ...alt, [personId]: oben }));
+  }
+
+  bereichHoehe(e: Zeitspanne): number {
+    return Math.max(e.endeMinuten - e.startMinuten, KARTEN_HOEHE);
+  }
+
+  kartenY(e: Zeitspanne,scrollOben: number): number {
+    const klebt = Math.max(e.startMinuten, scrollOben + STICKY_OBEN);
+    const unten = e.startMinuten + this.bereichHoehe(e) - KARTEN_HOEHE;
+    return Math.min(klebt, unten);
   }
 
   scrollZielFuer(ereignisse: Ereignis[]): number {
@@ -105,7 +127,7 @@ freiePositionen(
   return positionen;
 }
 
-  ereignisseFuerPerson(personId: number): Ereignis[] {
+  ereignisseFuerPerson(personId: number, scrollOben: number): Ereignis[] {
     const tag = this.angezeigterTag();
     const schichtEreignisse = this.schichtService.schichten
     .value()
@@ -138,15 +160,27 @@ freiePositionen(
     const alle = [...schichtEreignisse, ...terminEreignisse];
 
     const sortiert = [...alle].sort((a, b) => a.startMinuten - b.startMinuten);
-    const stapel = this.freiePositionen(sortiert, (a, b) => this.ueberlappen(a,b));
     const spuren = this.freiePositionen(sortiert, (a, b) => this.dauerUeberlappt(a, b));
     const spurenBreite = (spuren.length === 0 ? 0 : Math.max(...spuren) + 1) * SPUR_ABSTAND;
 
-    return sortiert.map((ereignis, i) => ({
+    const karten = sortiert
+      .map((ereignis, index) => {
+        const y = this.kartenY(ereignis,scrollOben);
+        return { startMinuten: y, endeMinuten: y + KARTEN_HOEHE, index };
+      })
+      .sort((a, b) => a.startMinuten - b.startMinuten || a.index - b.index);
+    const kartenSpalten = this.freiePositionen(karten, (a, b) => this.ueberlappen(a, b));
+    const spalteVon: number[] = [];
+    for (let j = 0; j < karten.length; j++) {
+      spalteVon[karten[j].index] = kartenSpalten[j];
+    }
+
+    return sortiert.map((ereignis,i) =>({
       ...ereignis,
-      stapelPosition: stapel[i],
+      stapelPosition: spalteVon[i],
       linieLinks: spuren[i] * SPUR_ABSTAND,
-      karteLinks: spurenBreite + KARTEN_RAND + stapel[i] * KARTEN_VERSATZ,
+      karteLinks: spurenBreite + KARTEN_RAND + spalteVon[i] * KARTEN_VERSATZ,
+      bereichHoehe: this.bereichHoehe(ereignis),
     }));
   } 
 }
