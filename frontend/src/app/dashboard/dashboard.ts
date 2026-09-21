@@ -11,6 +11,7 @@ const SPUR_ABSTAND = 6;
 const KARTEN_RAND = 8;
 const KARTEN_VERSATZ = 25;
 const STICKY_OBEN = 2;
+const MINUTEN_PRO_TAG = 1440;
 
 type Zeitspanne = { startMinuten: number; endeMinuten: number };
 export interface Ereignis {
@@ -56,12 +57,37 @@ export class Dashboard {
     return `${stunden.toString().padStart(2, "0")}:${rest.toString().padStart(2, "0")}`;
   }
 
+  datumText(datum: Date): string {
+    const monat = String(datum.getMonth() +1).padStart(2, "0");
+    const tagImMonat = String(datum.getDate()).padStart(2, "0");
+    return `${datum.getFullYear()}-${monat}-${tagImMonat}`;
+  }
+
   angezeigterTag(): string {
     const tag = new Date();
     tag.setDate(tag.getDate() + this.tagOffset());
-    const monat = String(tag.getMonth() + 1).padStart(2, "0");
-    const tagImMonat = String(tag.getDate()).padStart(2, "0");
-    return `${tag.getFullYear()}-${monat}-${tagImMonat}`;
+    return this.datumText(tag);
+  }
+
+  tagVerschoben(tag: string, tage:number): string {
+    const [jahr, monat, tagImMonat] = tag.split("-").map(Number);
+    return this.datumText(new Date(jahr, monat - 1, tagImMonat + tage));
+  }
+
+  ausschnittFuerTag(
+    tag: string,
+    startDatum: string,
+    startMinuten: number,
+    endeDatum: string,
+    endeMinuten: number,
+  ): Zeitspanne | null {
+    if (tag < startDatum || tag > endeDatum) {
+      return null;
+    }
+    return {
+      startMinuten: tag === startDatum ? startMinuten : 0,
+      endeMinuten: tag === endeDatum ? endeMinuten :MINUTEN_PRO_TAG,
+    };
   }
 
   angezeigterTagText(): string {
@@ -142,34 +168,50 @@ freiePositionen(
     const tag = this.angezeigterTag();
     const schichtEreignisse = this.schichtService.schichten
     .value()
-    .filter((s) => s.person_id === personId && s.datum === tag)
-    .map((s) =>({
-      titel: s.titel,
-      farbe: s.farbe,
-      startMinuten: this.zeitZuMinuten(s.start),
-      endeMinuten: this.zeitZuMinuten(s.ende),
-      startText: this.minutenZuText(this.zeitZuMinuten(s.start)),
-      endeText: this.minutenZuText(this.zeitZuMinuten(s.ende)),
-    }));
-
+    .filter((s) => s.person_id ===personId)
+    .flatMap((s) => {
+      const start = this.zeitZuMinuten(s.start);
+      const ende = this.zeitZuMinuten(s.ende);
+      const endeDatum = ende < start ? this.tagVerschoben(s.datum, 1) : s.datum;
+      const teil = this.ausschnittFuerTag(tag, s.datum, start, endeDatum, ende);
+      if (!teil) {
+        return [];
+      }
+      return [
+        {
+          titel: s.titel,
+          farbe: s.farbe,
+          startMinuten: teil.startMinuten,
+          endeMinuten: teil.endeMinuten,
+          startText: this.minutenZuText(start),
+          endeText: this.minutenZuText(ende),
+        },
+      ];
+    });
+  
     const terminEreignisse = this.terminService.termine
-      .value()
-      .filter((t) => t.person_id === personId && t.datum_zeit.startsWith(tag))
-      .map((t) => {
-        const startMinuten = this.datumZeitZuMinuten(t.datum_zeit);
-        const endeMinuten = this.datumZeitZuMinuten(t.ende_zeit);
-        return {
+    .value()
+    .filter((t) => t.person_id === personId)
+    .flatMap((t) => {
+      const start = this.datumZeitZuMinuten(t.datum_zeit);
+      const ende = this.datumZeitZuMinuten(t.ende_zeit);
+      const teil = this.ausschnittFuerTag(tag, t.datum_zeit.slice(0, 10), start, t.ende_zeit.slice(0, 10), ende);
+      if (!teil) {
+        return [];
+      }
+      return [
+        {
           titel: t.titel,
           farbe: t.farbe,
-          startMinuten,
-          endeMinuten,
-          startText: this.minutenZuText(startMinuten),
-          endeText: this.minutenZuText(endeMinuten),
-        };
-      });
+          startMinuten: teil.startMinuten,
+          endeMinuten: teil.endeMinuten,
+          startText: this.minutenZuText(start),
+          endeText: this.minutenZuText(ende),
+        },
+      ];
+    });
 
     const alle = [...schichtEreignisse, ...terminEreignisse];
-
     const sortiert = [...alle].sort((a, b) => a.startMinuten - b.startMinuten);
     const spuren = this.freiePositionen(sortiert, (a, b) => this.dauerUeberlappt(a, b));
     const spurenBreite = (spuren.length === 0 ? 0 : Math.max(...spuren) + 1) * SPUR_ABSTAND;
@@ -186,12 +228,12 @@ freiePositionen(
       spalteVon[karten[j].index] = kartenSpalten[j];
     }
 
-    return sortiert.map((ereignis,i) =>({
+    return sortiert.map((ereignis, i) => ({
       ...ereignis,
       stapelPosition: spalteVon[i],
       linieLinks: spuren[i] * SPUR_ABSTAND,
       karteLinks: spurenBreite + KARTEN_RAND + spalteVon[i] * KARTEN_VERSATZ,
       bereichHoehe: this.bereichHoehe(ereignis),
     }));
-  } 
+  }
 }
