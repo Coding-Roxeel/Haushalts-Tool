@@ -1,0 +1,37 @@
+:root {
+    color-scheme: light dark;
+
+    /* Farben */
+    --bg: light-dark(#E6EDF3, #0A1018);
+    --glow-1: light-dark(#BFE3F0, #14405A);
+    --glow-2: light-dark(#FAD9CC, #4A2140);
+    --flaeche: light-dark(#FFFFFF, #1A2432);
+    --flaeche-2: light-dark(#F1F5F9, #121A25);
+    --glas: light-dark(rgba(255, 255, 255, 0.62), rgba(24, 34, 48, 0.55));
+    --rand: light-dark(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.14));
+    --text: light-dark(#12202B, #EAF1F7);
+    --text-2: light-dark(#4E6172, #9DB0C1);
+    --akzent: light-dark(#A85F14, #DFA15C);
+    --akzent-text: light-dark(#FFFFFF, #2A1804);
+    --gut: light-dark(#178A66, #3DDBB0);
+
+    /* Tiefe */
+    --schatten-farbe: light-dark(rgba(18, 32, 43, 0.28), rgba(0, 0, 0, 0.6));
+    --schatten-farbe-stark: light-dark(rgba(18, 32, 43, 0.4), rgba(0, 0, 0, 0.8));
+    --schatten-karte: 0 4px 14px -4px var(--schatten-farbe);
+    --schatten-hoch: 0 22px 44px -14px var(--schatten-farbe-stark);
+
+    /* Form */
+    --radius: 16px;
+    --radius-klein: 10px;
+    --radius-knopf: 12px;
+
+    /* Schrift */
+    --schrift: "Manrope Variable", system-ui, sans-serif;
+
+    /* Bewegung */
+    --ease-schweben: cubic-bezier(0.22, 1, 0.36, 1);
+    --dauer-schweben: 0.6s;
+    --ease-fliessen: cubic-bezier(0.65, 0, 0.35, 1);
+    --dauer-fliessen: 0.55s;
+}

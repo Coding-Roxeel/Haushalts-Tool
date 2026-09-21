@@ -1,0 +1,71 @@
+.kopf {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--glas);
+    border-bottom: 1px solid var(--rand);
+    backdrop-filter: blur(16px) saturate(150%);
+}
+
+.titel {
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.menue {
+    display: flex;
+    flex: 1;
+    gap: 0.25rem;
+    margin-left: 0.6rem;
+}
+
+.punkt {
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-klein);
+    color: var(--text-2);
+    font-weight: 600;
+    text-decoration: none;
+    transition:background var(--dauer-schweben) var(--ease-schweben),
+        color var(--dauer-schweben) var(--ease-schweben);
+}
+
+a.punkt:hover {
+    background:color-mix(in srgb, var(--text) 8%, transparent);
+    color: var(--text);
+}
+
+.punkt.aktiv {
+    color: var(--text);
+    box-shadow: 0 2px 0 var(--akzent), 0 10px 16px -8px var(--akzent);
+}
+
+.punkt.bald {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.profil {
+    padding: 0;
+    border:0;
+    background: none;
+    cursor: pointer;
+}
+
+.avatar {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background: var(--akzent);
+    color: var(--akzent-text);
+    font-weight: 800;
+}
+
+main {
+    padding: 1.25rem 1rem;
+}

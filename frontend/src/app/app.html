@@ -1,3 +1,28 @@
-<h1>Bärenhöhle Haushalts-Tool</h1>
+<header class="kopf">
+    <span class="titel">Bärenhöhle</span>
 
-<router-outlet />
+
+    <nav class="menue" aria-label="Hauptmenü">
+        @for (punkt of menue; track punkt.titel) {
+            @if (punkt.pfad) {
+                <a
+                    class="punkt"
+                    [routerLink]="punkt.pfad"
+                    routerLinkActive="aktiv"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    >{{ punkt.titel }}</a
+                >
+            } @else {
+                <span class="punkt bald" title="Kommt bald">{{ punkt.titel }}</span>
+            }
+        }
+    </nav>
+
+    <button type="button" class="profil" aria-label="Profil">
+        <span class="avatar">?</span>
+    </button>
+</header>
+
+<main>
+    <router-outlet />
+</main>
