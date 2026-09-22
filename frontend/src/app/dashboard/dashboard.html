@@ -1,22 +1,23 @@
 <div class="tag-umschalter">
-    <span [class.aktiv-label]="tagOffset() === 0">Heute</span>
-    <button
-        type="button"
-        role="switch"
-        class="schalter"
-        aria-label="Zwischen heute und morgen umschalten"
-        [class.morgen]="tagOffset() === 1"
-        [attr.aria-checked]="tagOffset() === 1"
-        (click)="tagOffset.set(tagOffset() === 0 ? 1 : 0)"
-    ></button>
-    <span [class.aktiv-label]="tagOffset() === 1">Morgen</span>
-    <span class="tag-datum"> {{ angezeigterTagText() }}</span>
+    <div
+        class="seg"
+        role="group"
+        aria-label="Tag wählen"
+        [attr.data-tag]="tagOffset()"
+        [class.nach-r]="richtung() === 'nach-r'"
+        [class.nach-l]="richtung() === 'nach-l'"
+    >
+        <span class="thumb" aria-hidden="true"></span>
+        <button type="button" [attr.aria-pressed]="tagOffset() === 0" (click)="tagWechseln(0)">Heute</button>
+        <button type="button" [attr.aria-pressed]="tagOffset() === 1" (click)="tagWechseln(1)">Morgen</button>
+    </div>
+    <span class="tag-datum">{{ angezeigterTagText() }}</span>
 </div>
 
 <div class="personen-liste">
     @for (person of personService.personen.value();track person.id) {
-        <div class="person-karte" [style.border-color]="person.farbe">
-            <h2 [style.color]="person.farbe"> {{ person.name }}</h2>
+        <div class="person-karte">
+            <h2> {{ person.name }}</h2>
 
             @let ereignisse = ereignisseFuerPerson(person.id, scrollPositionFuer(person.id));
 

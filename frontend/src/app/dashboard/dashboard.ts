@@ -40,6 +40,15 @@ export class Dashboard {
   protected readonly stunden = Array.from({ length: 24 },(_, i) => i);
   protected readonly tagOffset = signal(0);
   protected readonly scrollPositionen = signal<Record<number, number>>({});
+  protected readonly richtung = signal<"nach-r" | "nach-l" | null>(null);
+
+  tagWechseln(neu: number): void {
+    if (neu === this.tagOffset()) {
+      return;
+    }
+    this.richtung.set(neu > this.tagOffset() ? "nach-r" : "nach-l");
+    this.tagOffset.set(neu);
+  }
 
   zeitZuMinuten(zeit: string): number {
     const [stunden, minuten] = zeit.split(":").map(Number);

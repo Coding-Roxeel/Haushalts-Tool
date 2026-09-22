@@ -1,17 +1,37 @@
+.personen-liste {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
 .person-karte {
-    border: 2px solid;
-    border-radius: 8px;
+    border: 1px solid var(--rand);
+    border-radius: var(--radius);
     padding: 1rem;
     box-sizing: border-box;
-    width:340px;
+    width: 340px;
     max-width: 100%;
+    background: var(--glas);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    box-shadow: var(--schatten-karte);
+}
+
+.person-karte h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.1rem;
 }
 
 .zeitachse-fenster {
     height: 240px;
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
-    border: 1px solid #ccc;
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-klein);
+    background: color-mix(in srgb, var(--flaeche-2) 55%, transparent);
 }
 
 .zeitachse-24h {
@@ -19,52 +39,11 @@
     height: 1440px;
 }
 
-.ereignis-linie {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    min-height: 4px;
-    border-radius: 2px;
-    transition: box-shadow 0.15s ease, opacity 0.15s ease;
-    pointer-events: auto;
-}
-
-.ereignis-karte {
-    position: sticky;
-    top: 2px;
-    width: 140px;
-    height: 30px;
-    padding: 0 0.5rem;
-    display:flex;
-    align-items: center;
-    background: white;
-    border-left: 4px solid;
-    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
-    box-sizing: border-box;
-    transition: box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease, margin-left 0.2s ease;
-    pointer-events: auto;
-}
-
-.ereignis:hover .ereignis-karte {
-    z-index: 50 !important;
-    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
-}
-
-.ereignis-text {
-    min-width: 0;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .stunden-linie {
     position: absolute;
     left: 0;
     right: 0;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--rand);
 }
 
 .stunden-label {
@@ -72,7 +51,8 @@
     top: 2px;
     left: 4px;
     font-size: 0.7rem;
-    color: #777;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
 }
 
 .ereignisse {
@@ -83,61 +63,6 @@
     right: 0;
 }
 
-.tag-umschalter {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.tag-datum {
-    color: #555;
-}
-
-.schalter {
-    position: relative;
-    width: 52px;
-    height: 28px;
-    padding: 0;
-    border: none;
-    border-radius: 14px;
-    background: #999;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.schalter::after {
-    content: "";
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: white;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease;
-}
-
-.schalter.morgen {
-    background: #333;
-}
-
-.schalter.morgen::after {
-    transform: translateX(24px);
-}
-
-.aktiv-label {
-    font-weight: bold;
-}
-
-.personen-liste {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-start;
-}
-
 .ereignis {
     position: absolute;
     left: 0;
@@ -145,13 +70,64 @@
     pointer-events: none;
 }
 
+.ereignis-linie {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    min-height: 4px;
+    border-radius: 2px;
+    pointer-events: auto;
+    transition: 
+        box-shadow var(--dauer-schweben) var(--ease-schweben),
+        opacity var(--dauer-schweben) var(--ease-schweben);
+}
+
+.ereignis-karte {
+    position: sticky;
+    top:2px;
+    width: 140px;
+    height: 30px;
+    padding: 0 0.5rem;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    background: color-mix(in srgb, var(--flaeche) 82%,transparent);
+    color: var(--text);
+    border: 1px solid var(--rand);
+    border-left: 4px solid;
+    border-radius: var(--radius-klein);
+    box-shadow: var(--schatten-karte);
+    pointer-events: auto;
+    transition:
+        box-shadow var(--dauer-schweben) var(--ease-schweben),
+        transform var(--dauer-schweben) var(--ease-schweben),
+        opacity var(--dauer-schweben) var(--ease-schweben),
+        margin-left var(--dauer-fliessen) var(--ease-fliessen);
+}
+
+.ereignis:hover .ereignis-karte {
+    z-index: 50 !important;
+    box-shadow: var(--schatten-hoch);
+    transform: translateY(-2px);
+}
+
 .ereignis:hover .ereignis-linie {
     z-index: 40;
-    box-shadow: 0 0 0 2px white, 0 0 6px 2px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 0 2px var(--flaeche), 0 0 8px 2px var(--schatten-farbe-stark);
 }
 
 .ereignisse:has(.ereignis:hover) .ereignis:not(:hover) > * {
     opacity: 0.35;
+}
+
+.ereignis-text {
+    min-width: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @keyframes lauftext {
@@ -171,5 +147,100 @@
     .ereignis:hover .ereignis-text-inhalt {
         display: inline-block;
         animation: lauftext var(--lauf-dauer, 3s) ease-in-out infinite alternate;
+    }
+}
+
+.tag-umschalter {
+   display: flex;
+   align-items: center;
+   gap: 0.75rem;
+   margin-bottom: 1rem;
+}
+
+.tag-datum {
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.seg {
+    position: relative;
+    display: inline-flex;
+    background: var(--flaeche-2);
+    border-radius: 999px;
+    padding: 3px;
+    isolation: isolate;
+}
+
+.seg button {
+    position: relative;
+    z-index: 1;
+    padding: 0.4rem 1rem;
+    border: 0;
+    background: none;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color var(--dauer-fliessen) var(--ease-fliessen);
+}
+
+.seg button[aria-pressed="true"] {
+    color: var(--akzent-text);
+}
+
+.thumb {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    border-radius: 999px;
+    background: var(--akzent);
+    box-shadow: var(--schatten-karte);
+}
+
+.seg[data-tag="1"] .thumb {
+    left: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes strecke-rechts {
+        0% {
+            left: 3px;
+            width: calc(50% - 3px);
+        }
+        45% {
+            left: 3px;
+            width: calc(100% - 6px);
+        }
+        100% {
+            left: 50%;
+            width: calc(50% - 3px);
+        }
+    }
+
+    @keyframes strecke-links {
+        0% {
+            left: 50%;
+            width: calc(50% - 3px);
+        }
+        45% {
+            left: 3px;
+            width: calc(100% - 6px);
+        }
+        100% {
+            left: 3px;
+            width: calc(50% - 3px);
+        }
+    }
+
+    .seg.nach-r .thumb {
+        animation: strecke-rechts var(--dauer-fliessen) var(--ease-fliessen);
+    }
+
+    .seg.nach-l .thumb {
+        animation: strecke-links var(--dauer-fliessen) var(--ease-fliessen);
     }
 }
