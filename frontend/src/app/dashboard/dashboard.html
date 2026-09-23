@@ -15,61 +15,7 @@
 </div>
 
 <div class="personen-liste">
-    @for (person of personService.personen.value();track person.id) {
-        <div class="person-karte">
-            <h2> {{ person.name }}</h2>
-
-            @let ereignisse = ereignisseFuerPerson(person.id, scrollPositionFuer(person.id));
-
-            <div class="zeitachse-fenster" [appScrollZiel]="scrollZielFuer(ereignisse)" (scroll)="scrollGeandert(person.id, $event)">
-                <div class="zeitachse-24h">
-                    @for (stunde of stunden; track stunde) {
-                        <div class="stunden-linie" [style.top.px]="stunde * 60">
-                            <span class="stunden-label">{{ minutenZuText(stunde * 60) }}</span>
-                        </div>
-                    }
-                    <div class="ereignisse">
-                        @for (ereignis of ereignisse; track ereignis.titel + ereignis.startMinuten) {
-                            <div
-                                class="ereignis"
-                                [style.top.px]="ereignis.startMinuten"
-                                [style.height.px]="ereignis.bereichHoehe"
-                            >
-                                <div
-                                    class="ereignis-linie"
-                                    [style.left.px]="ereignis.linieLinks"
-                                    [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
-                                    [style.background]="ereignis.farbe"
-                                    (mouseenter)="lauftextMessen($event)"
-                                ></div>
-                                <button
-                                type="button"
-                                class="ereignis-karte"
-                                [style.margin-left.px]="ereignis.karteLinks"
-                                [style.z-index]="ereignis.stapelPosition + 1"
-                                [style.border-left-color]="ereignis.farbe"
-                                [attr.aria-expanded]="istOffen(person.id,ereignis)"
-                                (mouseenter)="lauftextMessen($event)"
-                                (click)="karteUmschalten(person.id, ereignis)"
-                                >
-                                     <span class="ereignis-text"><span class="ereignis-text-inhalt">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span></span>
-                                </button>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-            @if (offenesEreignis(person.id, ereignisse); as e) {
-                <div class="detail" role="status" animate.enter="detail-rein" animate.leave="detail-raus">
-                    <div class="detail-kopf">
-                        <span class="detail-farbe" [style.background]="e.farbe"></span>
-                        <strong>{{ e.titel }}</strong>
-                        <button type="button" class="detail-zu" aria-label="Schließen" (click)="schliessen(person.id)">x</button>
-                    </div>
-                    <p>{{ e.startText }}-{{ e.endeText }} Uhr</p>
-                    <p>{{ angezeigterTagText() }}</p>
-                </div>
-            }
-        </div>
+    @for(person of personService.personen.value(); track person.id) {
+        <app-person-karte [person]="person" [tag]="angezeigterTag()" />
     }
 </div>
