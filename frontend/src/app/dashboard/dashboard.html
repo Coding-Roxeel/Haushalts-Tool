@@ -42,20 +42,34 @@
                                     [style.background]="ereignis.farbe"
                                     (mouseenter)="lauftextMessen($event)"
                                 ></div>
-                                <div
-                                    class="ereignis-karte"
-                                    [style.margin-left.px]="ereignis.karteLinks"
-                                    [style.z-index]="ereignis.stapelPosition + 1"
-                                    [style.border-left-color]="ereignis.farbe"
-                                    (mouseenter)="lauftextMessen($event)"
+                                <button
+                                type="button"
+                                class="ereignis-karte"
+                                [style.margin-left.px]="ereignis.karteLinks"
+                                [style.z-index]="ereignis.stapelPosition + 1"
+                                [style.border-left-color]="ereignis.farbe"
+                                [attr.aria-expanded]="istOffen(person.id,ereignis)"
+                                (mouseenter)="lauftextMessen($event)"
+                                (click)="karteUmschalten(person.id, ereignis)"
                                 >
-                                    <span class="ereignis-text"><span class="ereignis-text-inhalt">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span></span>
-                                </div>
+                                     <span class="ereignis-text"><span class="ereignis-text-inhalt">{{ ereignis.titel }} {{ ereignis.startText }}-{{ ereignis.endeText }}</span></span>
+                                </button>
                             </div>
                         }
                     </div>
                 </div>
             </div>
+            @if (offenesEreignis(person.id, ereignisse); as e) {
+                <div class="detail" role="status" animate.enter="detail-rein" animate.leave="detail-raus">
+                    <div class="detail-kopf">
+                        <span class="detail-farbe" [style.background]="e.farbe"></span>
+                        <strong>{{ e.titel }}</strong>
+                        <button type="button" class="detail-zu" aria-label="Schließen" (click)="schliessen(person.id)">x</button>
+                    </div>
+                    <p>{{ e.startText }}-{{ e.endeText }} Uhr</p>
+                    <p>{{ angezeigterTagText() }}</p>
+                </div>
+            }
         </div>
     }
 </div>

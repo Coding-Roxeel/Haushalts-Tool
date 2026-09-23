@@ -7,6 +7,7 @@
 }
 
 .person-karte {
+    position: relative;
     border: 1px solid var(--rand);
     border-radius: var(--radius);
     padding: 1rem;
@@ -98,6 +99,9 @@
     border-left: 4px solid;
     border-radius: var(--radius-klein);
     box-shadow: var(--schatten-karte);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
     pointer-events: auto;
     transition:
         box-shadow var(--dauer-schweben) var(--ease-schweben),
@@ -242,5 +246,96 @@
 
     .seg.nach-l .thumb {
         animation: strecke-links var(--dauer-fliessen) var(--ease-fliessen);
+    }
+}
+
+.ereignis-karte[aria-expanded="true"] {
+    outline: 2px solid var(--akzent);
+    outline-offset: 1px;
+}
+
+.detail {
+    position: absolute;
+    left: 1.5rem;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 60;
+    padding: 0.75rem 1rem;
+    background: color-mix(in srgb, var(--flaeche) 85%, transparent);
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-knopf);
+    box-shadow: var(--schatten-hoch);
+}
+
+.detail-kopf {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-kopf strong {
+    flex: 1;
+}
+
+.detail-farbe {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.detail-zu {
+    padding: 0 0.25rem;
+    border:0;
+    background: none;
+    color: var(--text-2);
+    font: inherit;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.detail p {
+    margin: 0.25rem 0 0;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes detail-rein {
+        from {
+            opacity: 0;
+            transform: translateY(10px) scale(0.96);
+            filter:blur(6px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+            filter: none;
+        }
+    }
+
+    @keyframes detail-raus {
+        from {
+            opacity: 1;
+            transform: none;
+            filter: none;
+        }
+        to {
+            opacity: 0;
+            transform: translateY(10px) scale(0.96);
+            filter: blur(6px);
+        }
+    }
+
+    .detail-rein {
+        animation: detail-rein var(--dauer-schweben) var(--ease-schweben);
+    }
+
+    .detail-raus {
+        animation: detail-raus 0.3s var(--ease-schweben) forwards;
     }
 }

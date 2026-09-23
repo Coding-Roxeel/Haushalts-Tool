@@ -41,13 +41,43 @@ export class Dashboard {
   protected readonly tagOffset = signal(0);
   protected readonly scrollPositionen = signal<Record<number, number>>({});
   protected readonly richtung = signal<"nach-r" | "nach-l" | null>(null);
+  protected readonly offen = signal<Record<number, string | null>>({});
 
   tagWechseln(neu: number): void {
     if (neu === this.tagOffset()) {
       return;
     }
     this.richtung.set(neu > this.tagOffset() ? "nach-r" : "nach-l");
+    this.offen.set({});
     this.tagOffset.set(neu);
+  }
+
+  schluessel(e: Ereignis): string {
+    return `${e.titel}|${e.startMinuten}`;
+  }
+
+  istOffen(personId: number, e: Ereignis): boolean {
+    return this.offen()[personId] === this.schluessel(e);
+  }
+
+  karteUmschalten(personId: number, e: Ereignis): void {
+    const schluessel =  this.schluessel(e);
+    this.offen.update((alt) => ({
+      ...alt,
+      [personId]: alt[personId] === schluessel ? null : schluessel,
+    }));
+  }
+
+  schliessen(personId: number): void {
+    this.offen.update((alt) => ({ ...alt, [personId]: null }));
+  }
+
+  offenesEreignis(personId: number, ereignisse: Ereignis[]): Ereignis | undefined {
+    const schluessel = this.offen()[personId];
+    if(!schluessel) {
+      return undefined;
+    }
+    return ereignisse.find((e) => this.schluessel(e) === schluessel);
   }
 
   zeitZuMinuten(zeit: string): number {
