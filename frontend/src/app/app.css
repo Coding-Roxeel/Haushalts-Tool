@@ -33,12 +33,15 @@
         color var(--dauer-schweben) var(--ease-schweben);
 }
 
-a.punkt:hover {
+a.punkt:hover,
+button.punkt:hover,
+.mit-sub:has(:focus-visible) > .punkt {
     background:color-mix(in srgb, var(--text) 8%, transparent);
     color: var(--text);
 }
 
-.punkt.aktiv {
+.punkt.aktiv,
+.mit-sub.aktiv-eltern > .punkt {
     color: var(--text);
     box-shadow: 0 2px 0 var(--akzent), 0 10px 16px -8px var(--akzent);
 }
@@ -68,4 +71,79 @@ a.punkt:hover {
 
 main {
     padding: 1.25rem 1rem;
+}
+
+button.punkt {
+    border: 0;
+    background: none;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.mit-sub {
+    position: relative;
+}
+
+.sub {
+    position: absolute;
+    top:100%;
+    left:0;
+    z-index:20;
+    display: grid;
+    gap: 2px;
+    min-width: 12rem;
+    padding: 0.4rem;
+    background: color-mix(in srgb, var(--flaeche) 88%, transparent);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border: 1px solid var(--rand);
+    border-radius: var(--radius);
+    box-shadow: var(--schatten-hoch);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(6px) scale(0.98);
+    filter: blur(6px);
+    transition:
+        opacity var(--dauer-schweben) var(--ease-schweben),
+        transform var(--dauer-schweben) var(--ease-schweben),
+        filter var(--dauer-schweben) var(--ease-schweben),
+        visibility 0s linear var(--dauer-schweben);
+}
+
+.mit-sub:hover .sub,
+.mit-sub:has(:focus-visible) .sub {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    filter: none;
+    transition-delay: 0s;
+}
+
+.unterpunkt {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-klein);
+    color: var(--text);
+    font-weight:500;
+    text-decoration: none;
+    white-space:nowrap;
+}
+
+.unterpunkt:hover {
+    background: color-mix(in srgb, var(--akzent) 16%,transparent);
+}
+
+.unterpunkt.aktiv {
+    color: var(--akzent);
+    font-weight:700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sub {
+        transform: none;
+        filter: none;
+        transition: none;
+    }
 }

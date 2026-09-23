@@ -4,6 +4,7 @@ import {RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 interface MenuePunkt {
   titel: string;
   pfad?: string;
+  kinder?: MenuePunkt[];
 }
 
 @Component({
@@ -15,7 +16,7 @@ interface MenuePunkt {
 export class App {
   protected readonly menue: MenuePunkt[] = [
     { titel: "Dashboard", pfad: "/" },
-    { titel: "Kalender" },
+    { titel: "Kalender", kinder: [{ titel:"Termin anlegen", pfad: "/kalender/termin-neu" }] },
     { titel: "Haushaltsplan" },
     { titel: "Essen" },
     { titel: "Einkaufszettel" },

@@ -4,7 +4,16 @@
 
     <nav class="menue" aria-label="Hauptmenü">
         @for (punkt of menue; track punkt.titel) {
-            @if (punkt.pfad) {
+            @if (punkt.kinder) {
+                <div class="mit-sub" routerLinkActive="aktiv-eltern">
+                    <button type="button" class="punkt" aria-haspopup="true">{{ punkt.titel }}</button>
+                    <div class="sub">
+                        @for(kind of punkt.kinder; track kind.titel) {
+                            <a class="unterpunkt" [routerLink]="kind.pfad" routerLinkActive="aktiv">{{ kind.titel }}</a>
+                        }
+                    </div>
+                </div>
+            } @else if (punkt.pfad) {
                 <a
                     class="punkt"
                     [routerLink]="punkt.pfad"
@@ -12,8 +21,8 @@
                     [routerLinkActiveOptions]="{ exact: true }"
                     >{{ punkt.titel }}</a
                 >
-            } @else {
-                <span class="punkt bald" title="Kommt bald">{{ punkt.titel }}</span>
+            }@else {
+                <span class="punkt bald" title="Kommt bald"> {{ punkt.titel }}</span>
             }
         }
     </nav>
