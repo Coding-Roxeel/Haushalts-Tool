@@ -15,6 +15,16 @@
     --akzent-text: light-dark(#FFFFFF, #2A1804);
     --gut: light-dark(#178A66, #3DDBB0);
 
+    /* Ereignis-Farben (Name -> Ton, je hell/dunkel) */
+    --ereignis-blau: light-dark(#2f6fdb, #6ea2ff);
+    --ereignis-tuerkis: light-dark(#0e8f86, #3ccfc4);
+    --ereignis-gruen: light-dark(#2e8b57, #4fd08a);
+    --ereignis-orange: light-dark(#d9730d, #ffa94d);
+    --ereignis-rot: light-dark(#c93c3c, #ff7b72);
+    --ereignis-rosa: light-dark(#c2377f, #ff7fb6);
+    --ereignis-violett: light-dark(#7b4fd1, #a98bff);
+    --ereignis-grau: light-dark(#667788, #9aa9ba);
+
     /* Tiefe */
     --schatten-farbe: light-dark(rgba(18, 32, 43, 0.28), rgba(0, 0, 0, 0.6));
     --schatten-farbe-stark: light-dark(rgba(18, 32, 43, 0.4), rgba(0, 0, 0, 0.8));

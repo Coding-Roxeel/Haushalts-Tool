@@ -4,6 +4,7 @@ import { SchichtService } from "../../schicht.service";
 import { TerminService } from "../../termin.service";
 import { ScrollZiel } from "../scroll-ziel.directive";
 import { datumText } from "../datum";
+import { farbeVar } from "../../farben";
 
 const KARTEN_HOEHE = 30;
 const LINIEN_MIN = 4;
@@ -36,6 +37,7 @@ export interface Ereignis {
 export class PersonKarte {
     readonly person = input.required<Person>();
     readonly tag = input.required<string>();
+    protected readonly farbeVar = farbeVar;
 
     private readonly schichtService = inject(SchichtService);
     private readonly terminService = inject(TerminService);

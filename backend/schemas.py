@@ -1,9 +1,10 @@
 from pydantic import BaseModel, Field
 from datetime import time, date, datetime
-from typing import Annotated, Optional
+from typing import Annotated, Literal, Optional
 
 
 Farbe = Annotated[str, Field(pattern=r"^#[0-9a-fA-F]{6}$")]
+Ereignisfarbe = Literal["blau", "tuerkis", "gruen", "orange", "rot", "rosa", "violett", "grau"]
 
 class PersonCreate(BaseModel):
     name: str
@@ -22,7 +23,7 @@ class SchichtVorlageCreate(BaseModel):
     start: time
     ende: time
     kuerzel: Optional[str] = None
-    farbe: Farbe
+    farbe: Ereignisfarbe
 
 class SchichtVorlageOut(BaseModel):
     id: int
@@ -42,7 +43,7 @@ class SchichtCreate(BaseModel):
     ende: time
     titel: str
     kuerzel: Optional[str] = None
-    farbe:Farbe
+    farbe: Ereignisfarbe
     vorlage_id: Optional[int] = None
 
 class SchichtOut(BaseModel):
@@ -64,7 +65,7 @@ class TerminCreate(BaseModel):
     titel: str
     datum_zeit: datetime
     ende_zeit: datetime
-    farbe: Farbe
+    farbe: Ereignisfarbe
 
 class TerminOut(BaseModel):
     id: int

@@ -19,7 +19,7 @@
                             class="ereignis-linie"
                             [style.left.px]="ereignis.linieLinks"
                             [style.height.px]="ereignis.endeMinuten - ereignis.startMinuten"
-                            [style.background]="ereignis.farbe"
+                            [style.background]="farbeVar(ereignis.farbe)"
                             (mouseenter)="lauftextMessen($event)"
                         ></div>
                         <button
@@ -27,7 +27,7 @@
                             class="ereignis-karte"
                             [style.margin-left.px]="ereignis.karteLinks"
                             [style.z-index]="ereignis.stapelPosition + 1"
-                            [style.border-left-color]="ereignis.farbe"
+                            [style.border-left-color]="farbeVar(ereignis.farbe)"
                             [attr.aria-expanded]="istOffen(ereignis)"
                             (mouseenter)="lauftextMessen($event)"
                             (click)="karteUmschalten(ereignis)"
@@ -43,7 +43,7 @@
     @if (offenesEreignis(); as e) {
         <div class="detail" role="status" animate.enter="detail-rein" animate.leave="detail-raus">
             <div class="detail-kopf">
-                <span class="detail-farbe" [style.background]="e.farbe"></span>
+                <span class="detail-farbe" [style.background]="farbeVar(e.farbe)"></span>
                 <strong>{{ e.titel }}</strong>
                 <button type="button" class="detail-zu" aria-label="Schließen" (click)="schliessen()">x</button>
             </div>
