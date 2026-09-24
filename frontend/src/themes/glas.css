@@ -14,6 +14,7 @@
     --akzent: light-dark(#A85F14, #DFA15C);
     --akzent-text: light-dark(#FFFFFF, #2A1804);
     --gut: light-dark(#178A66, #3DDBB0);
+    --fehler: light-dark(#B3261E, #FF8A80);
 
     /* Ereignis-Farben (Name -> Ton, je hell/dunkel) */
     --ereignis-blau: light-dark(#2f6fdb, #6ea2ff);
