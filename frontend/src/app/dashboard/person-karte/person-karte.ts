@@ -5,6 +5,7 @@ import { TerminService } from "../../termin.service";
 import { ScrollZiel } from "../scroll-ziel.directive";
 import { datumText } from "../datum";
 import { farbeVar } from "../../farben";
+import { RouterLink } from "@angular/router";
 
 const KARTEN_HOEHE = 30;
 const LINIEN_MIN = 4;
@@ -26,10 +27,12 @@ export interface Ereignis {
   linieLinks: number;
   karteLinks: number;
   bereichHoehe: number;
+  id: number;
+  art: "termin" | "schicht";
 }
 
 @Component({
-    imports: [ScrollZiel],
+    imports: [ScrollZiel, RouterLink],
     selector: "app-person-karte",
     styleUrl: "./person-karte.css",
     templateUrl: "./person-karte.html",
@@ -194,6 +197,8 @@ export class PersonKarte {
           return [
             {
               titel: s.titel,
+              id: s.id,
+              art: "schicht" as const,
               farbe: s.farbe,
               startMinuten: teil.startMinuten,
               endeMinuten: teil.endeMinuten,
@@ -216,6 +221,8 @@ export class PersonKarte {
           return [
             {
               titel: t.titel,
+              id: t.id,
+              art: "termin" as const,
               farbe: t.farbe,
               startMinuten: teil.startMinuten,
               endeMinuten: teil.endeMinuten,

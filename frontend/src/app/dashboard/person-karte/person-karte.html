@@ -49,6 +49,9 @@
             </div>
             <p>{{ e.startText }}-{{e.endeText }} Uhr</p>
             <p>{{ tagText() }}</p>
+            @if (e.art === "termin") {
+                <a class="bearbeiten" [routerLink]="['/kalender/termin', e.id]">Bearbeiten ></a>
+            }
         </div>
     }
 </div>

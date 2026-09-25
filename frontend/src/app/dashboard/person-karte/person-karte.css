@@ -234,3 +234,16 @@
         animation: detail-raus 0.3s var(--ease-schweben) forwards;
     }
 }
+
+.detail .bearbeiten {
+    justify-self: start;
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--akzent);
+    text-decoration: none;
+}
+
+.detail .bearbeiten:hover {
+    text-decoration: underline;
+}
