@@ -34,4 +34,15 @@ export class TerminService {
         this.termine.reload();
         return angelegt;
     }
+
+    async aendern(id: number, neu: NeuerTermin): Promise<Termin> {
+        const geaendert = await firstValueFrom(this.http.put<Termin>(`${TERMINE_URL}/${id}`, neu));
+        this.termine.reload();
+        return geaendert;
+    }
+
+    async loeschen(id: number):Promise<void> {
+        await firstValueFrom(this.http.delete(`${TERMINE_URL}/${id}`));
+        this.termine.reload();
+    }
 }

@@ -1,6 +1,10 @@
-<h1>Termin anlegen</h1>
+<h1>{{ istBearbeiten() ? "Termin bearbeiten" : "Termin anlegen" }}</h1>
 
+@if (nichtGefunden()) {
+    <p class="hinweis">Diesen Termin gibt es nicht (mehr). <a routerLink="/">Zurück zum Dashboard</a></p>
+}
 
+@if (!nichtGefunden()) {
 <form class="formular" [formRoot]="formular">
     <div class="feld">
         <label for="person">Person</label>
@@ -74,5 +78,21 @@
     <div class="knoepfe">
         <button type="submit" class="speichern" [disabled]="formular().submitting()">Speichern</button>
         <a routerLink="/" class="abbrechen">Abbrechen</a>
+
+        @if (istBearbeiten()) {
+        <button type="button" class="loeschen" (click)="loeschenFrage.set(true)">Löschen</button>
+        }
     </div>
+    
+    @if (loeschenFrage()) {
+        <div class="rueckfrage" role="alertdialog" aria-label="Termin löschen">
+            <p>Möchtest du diesen Termin wirklich löschen?</p>
+            <div class="rueckfrage-knoepfe">
+                <button type="button" class="loeschen-ja" (click)="loeschen()">Ja, löschen</button>
+                <button type="button" class="abbrechen" (click)="loeschenFrage.set(false)">Doch nicht</button>
+            </div>
+        </div>
+    }
+
 </form>
+}

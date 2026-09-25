@@ -225,3 +225,59 @@ select:focus-visible {
         transition: transform 0.8s ease;
     }
 }
+
+.hinweis {
+    margin: 0 0 1rem;
+    color: var(--text-2);
+}
+
+.knoepfe .loeschen {
+    margin-left: auto;
+}
+
+.loeschen,
+.loeschen-ja {
+    padding: 0.55rem 1rem;
+    font: inherit;
+    font-weight: 700;
+    color: var(--fehler);
+    background: none;
+    border: 1px solid color-mix(in srgb, var(--fehler) 45%, transparent);
+    border-radius: var(--radius-knopf);
+    cursor: pointer;
+    transition: background var(--dauer-schweben) var(--ease-schweben);
+}
+
+.loeschen:hover,
+.loeschen-ja:hover {
+    background: color-mix(in srgb, var(--fehler) 14%, transparent);
+}
+
+.rueckfrage {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.9rem 1rem;
+    background: color-mix(in srgb, var(--fehler) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--fehler) 45%, transparent);
+    border-radius: var(--radius-knopf);
+}
+
+.rueckfrage p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.rueckfrage-knoepfe {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+button.abbrechen {
+    padding: 0;
+    font: inherit;
+    font-weight: 600;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
