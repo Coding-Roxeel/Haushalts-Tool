@@ -51,6 +51,14 @@ export class PersonKarte {
         this.tag();
         return null;
     });
+    protected readonly loeschenFrage = linkedSignal<boolean>(() => {
+      this.offen();
+      return false;
+    });
+    protected readonly loeschFehler = linkedSignal<string | null>(() => {
+      this.offen();
+      return null;
+    });
     protected readonly tagText= computed(() => {
         const [jahr, monat, tag] = this.tag().split("-");
         return `${tag}.${monat}.${jahr}`;
@@ -78,6 +86,15 @@ export class PersonKarte {
 
     schliessen(): void {
         this.offen.set(null);
+    }
+
+    async loeschen(e: Ereignis): Promise<void> {
+      try {
+        await this.terminService.loeschen(e.id);
+        this.offen.set(null);
+      } catch {
+        this.loeschFehler.set("Der Termin konnte nicht gelöscht werden. Versuch es bitte gleich noch einmal.");
+      }
     }
 
     schluessel(e: Ereignis): string {

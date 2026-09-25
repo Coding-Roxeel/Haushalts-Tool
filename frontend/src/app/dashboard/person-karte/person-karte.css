@@ -247,3 +247,83 @@
 .detail .bearbeiten:hover {
     text-decoration: underline;
 }
+
+.detail-loeschen {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    padding: 0;
+    color: var(--text-2);
+    background: none;
+    border: 0;
+    border-radius: var(--radius-klein);
+    cursor: pointer;
+    transition:
+        color var(--dauer-schweben) var(--ease-schweben),
+        background var(--dauer-schweben) var(--ease-schweben);
+}
+
+.detail-loeschen svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.detail-loeschen:hover {
+    color: var(--fehler);
+    background: color-mix(in srgb, var(--fehler) 14%, transparent);
+}
+
+.detail-frage {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+}
+
+.detail .detail-frage p {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.detail .detail-frage .detail-fehler {
+    color: var(--fehler);
+}
+
+.detail-frage-knoepfe {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.loeschen-ja {
+    padding: 0.4rem 0.8rem;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--fehler);
+    background: none;
+    border: 1px solid color-mix(in srgb, var(--fehler) 45%, transparent);
+    border-radius: var(--radius-klein);
+    cursor: pointer;
+}
+
+.loeschen-ja:hover {
+    background: color-mix(in srgb, var(--fehler) 14%, transparent);
+}
+
+.detail-nein {
+    padding: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-2);
+    background:none;
+    border: 0;
+    cursor: pointer;
+}
