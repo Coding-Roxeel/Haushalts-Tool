@@ -47,6 +47,8 @@ legend {
 
 input[type="text"],
 input[type="datetime-local"],
+input[type="date"],
+input[type="time"],
 select {
     min-width: 0;
     padding: 0.6rem 0.75rem;
@@ -62,6 +64,8 @@ select {
 
 input[type="text"]:focus-visible,
 input[type="datetime-local"]:focus-visible,
+input[type="date"]:focus-visible,
+input[type="time"]:focus-visible,
 select:focus-visible {
     outline: 0;
     border-color: var(--akzent);
@@ -280,4 +284,10 @@ button.abbrechen {
     background: none;
     border: 0;
     cursor: pointer;
+}
+
+.hinweis-klein {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-2);
 }

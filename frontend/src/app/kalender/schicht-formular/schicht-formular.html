@@ -1,0 +1,131 @@
+<h1>{{ istBearbeiten() ? "Schicht bearbeiten" : "Schicht anlegen" }}</h1>
+
+@if (nichtGefunden()) {
+    <p class="hinweis">Diese Schicht gibt es nicht (mehr). <a routerLink="/">Zurück zum Dashboard</a></p>
+}
+
+@if (!nichtGefunden()) {
+<form class="formular" [formRoot]="formular">
+    <div class="feld-reihe">
+        <div class="feld">
+            <label for="person">Person</label>
+            <select id="person" [formField]="formular.person">
+                <option value="">Bitte wählen</option>
+                @for (person of personService.personen.value(); track person.id) {
+                    <option [value]="person.id">{{ person.name }}</option>
+                }
+            </select>
+            @if (formular.person().touched()) {
+                @for (fehler of formular.person().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+        </div>
+
+        <div class="feld">
+            <label for="datum">Datum</label>
+            <input id="datum" type="date" [formField]="formular.datum" />
+            @if (formular.datum().touched()) {
+                @for (fehler of formular.datum().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="feld">
+        <label for="vorlage">Vorlage (optional)</label>
+        <select id="vorlage" [formField]="formular.vorlage" (change)="vorlageGewaehlt()">
+            <option value="">Ohne Vorlage</option>
+            @for (vorlage of vorlagenService.schichtVorlagen.value(); track vorlage.id) {
+                <option [value]="vorlage.id">{{ vorlage.name }}</option>
+            }
+        </select>
+    </div>
+
+    <div class="feld">
+        <label for="titel">Titel</label>
+        <input id="titel" type="text" [formField]="formular.titel" />
+        @if (formular.titel().touched()) {
+            @for (fehler of formular.titel().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </div>
+
+    <div class="feld-reihe">
+        <div class="feld">
+            <label for="start">Beginn</label>
+            <input id="start" type="time" [formField]="formular.start" />
+            @if (formular.start().touched()) {
+                @for (fehler of formular.start().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+        </div>
+
+        <div class="feld">
+            <label for="ende">Ende</label>
+            <input id="ende" type="time" [formField]="formular.ende" />
+            @if (formular.ende().touched()) {
+                @for (fehler of formular.ende().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+            @if (endetAmFolgetag()) {
+                <p class="hinweis-klein">Die Schicht endet am nächsten Tag.</p>
+            }
+        </div>
+    </div>
+
+    <div class="feld">
+        <label for="kuerzel">Kürzel (optional)</label>
+        <input id="kuerzel" type="text" [formField]="formular.kuerzel" />
+        @if (formular.kuerzel().touched()) {
+            @for (fehler of formular.kuerzel().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </div>
+
+    <fieldset class="feld farben">
+        <legend>Farbe</legend>
+        <div class="farb-auswahl">
+            @for (farbe of farben; track farbe.schluessel) {
+                <label class="farb-option" [style.--farbe]="farbeVar(farbe.schluessel)">
+                    <input type="radio" [value]="farbe.schluessel" [formField]="formular.farbe" />
+                    <span class="farb-punkt"></span>
+                    <span>{{ farbe.name }}</span>
+                </label>
+            }
+        </div>
+        @if (formular.farbe().touched()) {
+            @for (fehler of formular.farbe().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </fieldset>
+
+    @if (serverFehler()) {
+        <p class="fehler" role="alert">{{ serverFehler() }}</p>
+    }
+
+    <div class="knoepfe">
+        <button type="submit" class="speichern" [disabled]="formular().submitting()">Speichern</button>
+        <a routerLink="/" class="abbrechen">Abbrechen</a>
+        @if (istBearbeiten()) {
+            <button type="button" class="loeschen" (click)="loeschenFrage.set(true)">Löschen</button>
+        }
+    </div>
+
+    @if (loeschenFrage()) {
+        <div class="rueckfrage" role="alertdialog" aria-label="Schicht löschen">
+            <p>Möchtest du diese Schicht wirklich löschen?</p>
+            <div class="rueckfrage-knoepfe">
+                <button type="button" class="loeschen-ja" (click)="loeschen()">Ja, löschen</button>
+                <button type="button" class="abbrechen" (click)="loeschenFrage.set(false)">Doch nicht</button>
+            </div>
+        </div>
+    }
+</form>
+}

@@ -20,7 +20,7 @@ const LEERES_MODELL: FormularModell = {person: "", titel: "", beginn: "", ende: 
     selector: "app-termin-formular",
     imports: [FormField, FormRoot, RouterLink],
     templateUrl: "./termin-formular.html",
-    styleUrl: "./termin-formular.css",
+    styleUrl: "../formular.css",
 })
 export class TerminFormular {
     readonly id = input<string>();
