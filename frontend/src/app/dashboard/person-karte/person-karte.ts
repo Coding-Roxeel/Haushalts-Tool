@@ -90,11 +90,20 @@ export class PersonKarte {
 
     async loeschen(e: Ereignis): Promise<void> {
       try {
-        await this.terminService.loeschen(e.id);
+        if (e.art === "termin") {
+          await this.terminService.loeschen(e.id);
+        } else {
+          await this.schichtService.loeschen(e.id);
+        }
         this.offen.set(null);
       } catch {
-        this.loeschFehler.set("Der Termin konnte nicht gelöscht werden. Versuch es bitte gleich noch einmal.");
+        const was = e.art === "termin" ? "Der Termin" : "Die Schicht";
+        this.loeschFehler.set(`${was} konnte nicht gelöscht werden. Versuch es bitte gleich noch einmal.`);
       }
+    }
+
+    dieserEintrag(e: Ereignis): string {
+      return e.art === "termin" ? "diesen Termin" : "diese Schicht";
     }
 
     schluessel(e: Ereignis): string {

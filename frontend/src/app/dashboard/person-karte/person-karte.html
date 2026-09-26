@@ -45,8 +45,7 @@
             <div class="detail-kopf">
                 <span class="detail-farbe" [style.background]="farbeVar(e.farbe)"></span>
                 <strong>{{ e.titel }}</strong>
-                @if (e.art === "termin") {
-                    <button type="button" class="detail-loeschen" aria-label="Termin löschen" (click)="loeschenFrage.set(true)">
+                    <button type="button" class="detail-loeschen" [attr.aria-label]="e.art === 'termin' ? 'Termin löschen' : 'Schicht löschen'" (click)="loeschenFrage.set(true)">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M3 6h18" />
                             <path d="M9 6V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V6" />
@@ -55,12 +54,11 @@
                             <path d="M14 10.5v6" />
                         </svg>
                     </button>
-                }
                 <button type="button" class="detail-zu" aria-label="Schließen" (click)="schliessen()">x</button>
             </div>
             @if (loeschenFrage()) {
                 <div class="detail-frage">
-                    <p>Möchtest du diesen Termin wirklich löschen?</p>
+                    <p>Möchtest du {{ dieserEintrag(e) }} wirklich löschen?</p>
                     @if (loeschFehler()) {
                         <p class="detail-fehler" role="alert">{{ loeschFehler() }}</p>
                     }
@@ -72,9 +70,7 @@
             } @else {
                 <p>{{ e.startText }}-{{ e.endeText }} Uhr</p>
                 <p>{{tagText() }}</p>
-                @if (e.art === "termin") {
-                    <a class="bearbeiten" [routerLink]="['/kalender/termin', e.id]"> Bearbeiten ></a>
-                }
+                    <a class="bearbeiten" [routerLink]="['/kalender', e.art, e.id]">Bearbeiten ></a>
             }
         </div>
     }
