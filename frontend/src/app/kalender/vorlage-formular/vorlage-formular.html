@@ -1,0 +1,94 @@
+<h1>{{ istBearbeiten() ? "Vorlage bearbeiten" : "Vorlage anlegen" }}</h1>
+
+@if (nichtGefunden()) {
+    <p class="hinweis">Diese Vorlage gibt es nicht (mehr). <a routerLink="/kalender/vorlagen">Zurück zu den Vorlagen</a></p>
+}
+
+@if (!nichtGefunden()) {
+<form class="formular" [formRoot]="formular">
+    <div class="feld">
+        <label for="name">Name</label>
+        <input id="name" type="text" [formField]="formular.name" />
+        @if (formular.name().touched()) {
+            @for (fehler of formular.name().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </div>
+
+    <div class="feld-reihe">
+        <div class="feld">
+            <label for="start">Beginn</label>
+            <input id="start" type="time" [formField]="formular.start" />
+            @if (formular.start().touched()) {
+                @for (fehler of formular.start().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+        </div>
+
+        <div class="feld">
+            <label for="ende">Ende</label>
+            <input id="ende" type="time" [formField]="formular.ende" />
+            @if (formular.ende().touched()) {
+                @for (fehler of formular.ende().errors(); track fehler.kind) {
+                    <p class="fehler">{{ fehler.message }}</p>
+                }
+            }
+            @if (endetAmFolgetag()) {
+                <p class="hinweis-klein">Die Schicht endet am nächsten Tag.</p>
+            }
+        </div>
+    </div>
+
+    <div class="feld">
+        <label for="kuerzel">Kürzel (optional)</label>
+        <input id="kuerzel" type="text" [formField]="formular.kuerzel" />
+        @if (formular.kuerzel().touched()) {
+            @for (fehler of formular.kuerzel().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </div>
+
+    <fieldset class="feld farben">
+        <legend>Farbe</legend>
+        <div class="farb-auswahl">
+            @for (farbe of farben; track farbe.schluessel) {
+                <label class="farb-option" [style.--farbe]="farbeVar(farbe.schluessel)">
+                    <input type="radio" [value]="farbe.schluessel" [formField]="formular.farbe" />
+                    <span class="farb-punkt"></span>
+                    <span>{{ farbe.name }}</span>
+                </label>
+            }
+        </div>
+        @if (formular.farbe().touched()) {
+            @for (fehler of formular.farbe().errors(); track fehler.kind) {
+                <p class="fehler">{{ fehler.message }}</p>
+            }
+        }
+    </fieldset>
+
+    @if (serverFehler()) {
+        <p class="fehler" role="alert">{{ serverFehler() }}</p>
+    }
+
+    <div class="knoepfe">
+        <button type="submit" class="speichern" [disabled]="formular().submitting()">Speichern</button>
+        <a routerLink="/kalender/vorlagen" class="abbrechen">Abbrechen</a>
+        @if (istBearbeiten()) {
+            <button type="button" class="loeschen" (click)="loeschenFrage.set(true)">Löschen</button>
+        }
+    </div>
+
+    @if (loeschenFrage()) {
+        <div class="rueckfrage" role="alertdialog" aria-label="Vorlage löschen">
+            <p>Möchtest du diese Vorlage wirklich löschen? Bereits eingetragene Schichten bleiben erhalten, sie sind dann nur nicht mehr mit einer Vorlage verknüpft.</p>
+            <div class="rueckfrage-knoepfe">
+                <button type="button" class="loeschen-ja" (click)="loeschen()">Ja, löschen</button>
+                <button type="button" class="abbrechen" (click)="loeschenFrage.set(false)">Doch nicht</button>
+            </div>
+        </div>
+    }
+</form>
+}

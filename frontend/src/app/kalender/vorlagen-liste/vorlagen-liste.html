@@ -1,0 +1,23 @@
+<h1>Schicht-Vorlagen</h1>
+<p class="einleitung">Mit einer Vorlage füllst du beim Anlegen einer Schicht Titel, Zeiten und Farbe mit einem Klick aus.</p>
+
+@if (vorlagenService.schichtVorlagen.value().length > 0) {
+    <ul class="liste">
+        @for (vorlage of vorlagenService.schichtVorlagen.value(); track vorlage.id) {
+            <li>
+                <a class="eintrag" [routerLink]="['/kalender/vorlage', vorlage.id]" [style.--farbe]="farbeVar(vorlage.farbe)">
+                    <span class="punkt"></span>
+                    <span class="name">{{ vorlage.name }}</span>
+                    @if (vorlage.kuerzel) {
+                        <span class="kuerzel">{{ vorlage.kuerzel }}</span>
+                    }
+                    <span class="zeiten">{{ vorlage.start.slice(0, 5) }} - {{ vorlage.ende.slice(0, 5) }} Uhr</span>
+                </a>
+            </li>
+        }
+    </ul>
+} @else if (!vorlagenService.schichtVorlagen.isLoading()) {
+    <p class="leer">Noch keine Vorlagen angelegt.</p>
+}
+
+<a class="neu" routerLink="/kalender/vorlage-neu">Neue Vorlage</a>
