@@ -147,3 +147,212 @@ button.punkt {
         transition: none;
     }
 }
+
+.menue-knopf {
+    display: none;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    padding: 0;
+    color: var(--text);
+    background: var(--flaeche);
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-klein);
+    cursor: pointer;
+}
+
+.menue-knopf svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+}
+
+.menue-knopf:focus-visible,
+.schublade-zu:focus-visible,
+.s-punkt:focus-visible,
+.s-unter:focus-visible {
+    outline: 2px solid var(--akzent);
+    outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+    .menue {
+        display: none;
+    }
+
+    .menue-knopf {
+        display: grid;
+    }
+
+    .profil {
+        margin-left: auto;
+    }
+}
+
+.scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: rgba(6, 10, 16, 0.5);
+}
+
+.schublade {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    width: min(18rem, 85vw);
+    padding: 1rem 0.75rem;
+    overflow-y: auto;
+    background: color-mix(in srgb, var(--flaeche) 92%, transparent);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border-right: 1px solid var(--rand);
+    box-shadow: var(--schatten-hoch);
+}
+
+.schublade-kopf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem 1rem; 
+}
+
+.schublade-zu {
+    padding: 0.2rem 0.5rem;
+    font: inherit;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--text-2);
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.s-punkt,
+.s-unter {
+    padding: 0.7rem 0.75rem;
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: var(--radius-klein);
+}
+
+.s-punkt:hover,
+.s-unter:hover {
+    background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.s-punkt.aktiv,
+.s-unter.aktiv {
+    color: var(--akzent);
+    background: color-mix(in srgb, var(--akzent) 16%, transparent);
+}
+
+.s-gruppe {
+    padding: 0.7rem 0.75rem 0.3rem;
+    color: var(--text-2);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.s-unter {
+    padding-left: 1.5rem;
+    font-weight: 600;
+}
+
+.s-punkt.bald {
+    opacity: 0.45;
+}
+
+@media (min-width: 761px) {
+    .scrim,
+    .schublade {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes schublade-rein {
+        from {
+            opacity: 0;
+            transform: translateX(-12px) scale(0.97);
+            filter: blur(8px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+            filter: none;
+        }
+    }
+
+    @keyframes schublade-raus {
+        from {
+            opacity: 1;
+            transform: none;
+            filter: none;
+        }
+        to {
+            opacity: 0;
+            transform: translateX(-12px) scale(0.97);
+            filter: blur(8px);
+        }
+    }
+
+    @keyframes scrim-rein {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes scrim-raus {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+
+    @keyframes s-rein {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    .schublade-rein {
+        animation: schublade-rein var(--dauer-schweben) var(--ease-schweben);
+    }
+
+    .schublade-raus {
+        animation: schublade-raus 0.3s var(--ease-schweben) forwards;
+    }
+
+    .scrim-rein {
+        animation: scrim-rein var(--dauer-schweben) var(--ease-schweben);
+    }
+
+    .scrim-raus {
+        animation: scrim-raus 0.3s var(--ease-schweben) forwards;
+    }
+
+    .schublade > * {
+        animation: s-rein var(--dauer-schweben) var(--ease-schweben) backwards;
+        animation-delay: calc(120ms + var(--i, 0) * 70ms);
+    }
+}

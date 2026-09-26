@@ -1,4 +1,18 @@
 <header class="kopf">
+    <button
+        type="button"
+        class="menue-knopf"
+        aria-label="Menü öffnen"
+        [attr.aria-expanded]="menueOffen()"
+        (click)="menueUmschalten()"
+    >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16" />
+            <path d="M4 12h16" />
+            <path d="M4 17h16" />
+        </svg>
+    </button>
+
     <span class="titel">Bärenhöhle</span>
 
 
@@ -31,6 +45,36 @@
         <span class="avatar">?</span>
     </button>
 </header>
+
+@if (menueOffen()) {
+    <div class="scrim" (click)="menueSchliessen()" animate.enter="scrim-rein" animate.leave="scrim-raus"></div>
+    <nav class="schublade" aria-label="Hauptmenü" animate.enter="schublade-rein" animate.leave="schublade-raus">
+        <div class="schublade-kopf">
+            <span class="titel">Bärenhöhle</span>
+            <button type="button" class="schublade-zu" aria-label="Menü schließen" (click)="menueSchliessen()">x</button>
+        </div>
+        @for (punkt of menue; track punkt.titel; let i = $index) {
+            @if (punkt.kinder) {
+                <span class="s-gruppe" [style.--i]="i">{{ punkt.titel }}</span>
+                @for (kind of punkt.kinder; track kind.titel) {
+                    <a class="s-unter" [style.--i]="i" [routerLink]="kind.pfad" routerLinkActive="aktiv" (click)="menueSchliessen()">{{ kind.titel }}</a>
+                }
+            } @else if (punkt.pfad) {
+                <a
+                    class="s-punkt"
+                    [style.--i]="i"
+                    [routerLink]="punkt.pfad"
+                    routerLinkActive="aktiv"
+                    [routerLinkActiveOptions]="{ exact: true }"
+                    (click)="menueSchliessen()"
+                    >{{ punkt.titel }}</a
+                >
+            } @else {
+                <span class="s-punkt bald" [style.--i]="i" title="Kommt bald">{{ punkt.titel }}</span>
+            }
+        }
+    </nav>
+}
 
 <main>
     <router-outlet />
