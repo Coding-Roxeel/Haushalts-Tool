@@ -26,7 +26,7 @@ export class App {
   }
   protected readonly menue: MenuePunkt[] = [
     { titel: "Dashboard", pfad: "/" },
-    { titel: "Kalender", kinder: [{ titel:"Termin anlegen", pfad: "/kalender/termin-neu" }, { titel: "Schicht anlegen", pfad: "/kalender/schicht-neu" }, { titel: "Schicht-Vorlagen", pfad: "/kalender/vorlagen"}] },
+    { titel: "Kalender", pfad: "/kalender", kinder: [{ titel:"Termin anlegen", pfad: "/kalender/termin-neu" }, { titel: "Schicht anlegen", pfad: "/kalender/schicht-neu" }, { titel: "Schicht-Vorlagen", pfad: "/kalender/vorlagen"}] },
     { titel: "Haushaltsplan" },
     { titel: "Essen" },
     { titel: "Einkaufszettel" },

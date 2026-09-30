@@ -1,0 +1,183 @@
+:host {
+    display: block;
+    max-width: 64rem;
+    margin-inline: auto;
+}
+
+h1 {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    letter-spacing: -0.01em;
+}
+
+.werkzeuge {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap:0.75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.monat-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.monat {
+    min-width: 9.5rem;
+    margin: 0;
+    font-size: 1.1rem;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.nav-knopf,
+.heute-knopf {
+    padding: 0.35rem 0.75rem;
+    font: inherit;
+    font-weight: 700;
+    color: var(--text);
+    background: var(--flaeche);
+    border: 1px solid color-mix( in srgb, var(--text) 18%, transparent);
+    border-radius: var(--radius-klein);
+    cursor: pointer;
+    transition:
+        transform var(--dauer-schweben) var(--ease-schweben),
+        box-shadow var(--dauer-schweben) var(--ease-schweben);
+}
+
+.nav-knopf:hover,
+.heute-knopf:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--schatten-karte);
+}
+
+.nav-knopf:focus-visible,
+.heute-knopf:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--akzent);
+    outline-offset: 2px;
+}
+
+.filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-2);
+}
+
+select {
+    padding: 0.4rem 0.7rem;
+    font: inherit;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--flaeche);
+    border: 1px solid color-mix(in srgb, var(--text) 18%,transparent);
+    border-radius: var(--radius-klein);
+}
+
+.raster {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.kopfzelle {
+    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-2);
+    text-align: center;
+}
+
+.zelle {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-height: 5.5rem;
+    padding: 0.35rem;
+    overflow: hidden;
+    background: var(--glas);
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-klein);
+}
+
+.zelle.ausserhalb {
+    opacity: 0.45;
+}
+
+.zelle.heute {
+    border-color: var(--akzent);
+    box-shadow: 0 0 0 1px var(--akzent);
+}
+
+.tag {
+    font-size: 0.8rem;
+    font-weight:700;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+}
+
+.heute .tag {
+    color: var(--akzent);
+}
+
+.chip {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0 0.3rem;
+    overflow: hidden;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.55;
+    white-space: nowrap;
+    background: color-mix(in srgb, var(--farbe) 24%, transparent);
+    border-left: 3px solid var(--farbe);
+    border-radius: 6px;
+}
+
+.chip.termin {
+    background: transparent;
+    border: 1px solid var(--farbe);
+}
+
+.chip.fortsetzung {
+    opacity: 0.65;
+}
+
+.wer {
+    flex: none;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.kurz {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mehr {
+    font-size: 0.7rem;
+    color: var(--text-2);
+}
+
+@media (max-width: 560px) {
+    .zelle {
+        min-height: 4.2rem;
+        padding: 0.2rem;
+    }
+
+    .wer {
+        display: none;
+    }
+
+    .chip {
+        padding: 0 0.2rem;
+        font-size: 0.65rem;
+    }
+}

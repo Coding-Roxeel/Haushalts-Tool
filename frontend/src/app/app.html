@@ -20,7 +20,7 @@
         @for (punkt of menue; track punkt.titel) {
             @if (punkt.kinder) {
                 <div class="mit-sub" routerLinkActive="aktiv-eltern">
-                    <button type="button" class="punkt" aria-haspopup="true">{{ punkt.titel }}</button>
+                    <a class="punkt" [routerLink]="punkt.pfad" aria-haspopup="true">{{ punkt.titel }}</a>
                     <div class="sub">
                         @for(kind of punkt.kinder; track kind.titel) {
                             <a class="unterpunkt" [routerLink]="kind.pfad" routerLinkActive="aktiv">{{ kind.titel }}</a>
@@ -55,7 +55,14 @@
         </div>
         @for (punkt of menue; track punkt.titel; let i = $index) {
             @if (punkt.kinder) {
-                <span class="s-gruppe" [style.--i]="i">{{ punkt.titel }}</span>
+                <a
+                class="s-punkt"
+                [style.--i]="i"
+                [routerLink]="punkt.pfad"
+                routerLinkActive="aktiv"
+                [routerLinkActiveOptions]="{exact: true }"
+                (click)="menueSchliessen()"
+                >{{ punkt.titel }}</a>
                 @for (kind of punkt.kinder; track kind.titel) {
                     <a class="s-unter" [style.--i]="i" [routerLink]="kind.pfad" routerLinkActive="aktiv" (click)="menueSchliessen()">{{ kind.titel }}</a>
                 }

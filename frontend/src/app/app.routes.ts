@@ -4,9 +4,11 @@ import { TerminFormular } from './kalender/termin-formular/termin-formular';
 import { SchichtFormular } from './kalender/schicht-formular/schicht-formular';
 import { VorlageFormular } from './kalender/vorlage-formular/vorlage-formular';
 import { VorlagenListe } from './kalender/vorlagen-liste/vorlagen-liste';
+import { KalenderSeite } from './kalender/kalender-seite/kalender-seite';
 
 export const routes: Routes = [
     { path: "", component: Dashboard },
+    { path: "kalender", component: KalenderSeite },
     { path: "kalender/termin-neu", component: TerminFormular },
     { path: "kalender/termin/:id", component: TerminFormular },
     { path: "kalender/schicht-neu", component: SchichtFormular },

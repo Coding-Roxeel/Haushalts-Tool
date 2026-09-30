@@ -1,0 +1,46 @@
+<h1>Kalender</h1>
+
+<div class="werkzeuge">
+    <div class="monat-nav">
+        <button type="button" class="nav-knopf" aria-label="Vorheriger Monat" (click)="monatWechseln(-1)">←</button>
+        <h2 class="monat">{{ monatText() }}</h2>
+        <button type="button" class="nav-knopf" aria-label="Nächster Monat" (click)="monatWechseln(1)">→</button>
+        <button type="button" class="heute-knopf" (click)="zuHeute()">Heute</button>
+    </div>
+
+    <div class="filter">
+        <label for="person-filter">Person</label>
+        <select id="person-filter" [value]="personFilter()" (change)="personFilter.set($any($event.target).value)">
+            <option value="">Alle</option>
+            @for (person of personService.personen.value(); track person.id) {
+                <option [value]="person.id">{{ person.name }}</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="raster" role="grid" aria-label="Monatskalender">
+    @for (name of wochentage; track name) {
+        <div class="kopfzelle" role="columnheader"> {{ name }}</div>
+    }
+    @for (zelle of zellen(); track zelle.datum) {
+        <div class="zelle" role="gridcell" [class.ausserhalb]="!zelle.imMonat" [class.heute]="zelle.heute">
+            <span class="tag">{{ zelle.tag }}</span>
+            @for(e of zelle.eintraege.slice(0, maxChips); track e.art + e.id) {
+                <span
+                    class="chip"
+                    [class.termin]="e.art === 'termin'"
+                    [class.fortsetzung]="e.fortsetzung"
+                    [style.--farbe]="farbeVar(e.farbe)"
+                    [attr.title]="e.personName + ': ' + e.titel + ' ' + e.zeit"
+                    >
+                    <span class="wer">{{ e.wer }}</span>
+                    <span class="kurz">{{ e.kurz }}</span>
+                </span>
+            }
+            @if (zelle.eintraege.length > maxChips) {
+                <span class="mehr">+ {{ zelle.eintraege.length - maxChips }}</span>
+            }
+        </div>
+    }
+</div>
