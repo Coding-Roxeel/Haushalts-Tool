@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Time, Date, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Time, Date, ForeignKey, DateTime, Table
+from sqlalchemy.orm import relationship
 from database import Base
 
 
@@ -33,12 +34,23 @@ class Schicht(Base):
     kuerzel = Column(String, nullable=True)
     farbe = Column(String, nullable=False)
 
+termin_personen = Table(
+    "termin_personen",
+    Base.metadata,
+    Column("termin_id", Integer, ForeignKey("termine.id", ondelete="CASCADE"), primary_key=True),
+    Column("person_id", Integer, ForeignKey("personen.id"), primary_key=True),
+)
+
 class Termin(Base):
     __tablename__ = "termine"
 
-    id = Column(Integer,primary_key=True, index=True)
-    person_id = Column(Integer, ForeignKey("personen.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True)
     titel = Column(String, nullable=False)
     datum_zeit = Column(DateTime, nullable=False)
     ende_zeit = Column(DateTime, nullable=False)
     farbe = Column(String, nullable=False)
+    personen = relationship("Person", secondary=termin_personen)
+
+    @property
+    def person_ids(self):
+        return [p.id for p in self.personen]

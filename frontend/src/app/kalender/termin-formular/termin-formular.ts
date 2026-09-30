@@ -6,7 +6,6 @@ import { PersonService } from "../../person.service";
 import { NeuerTermin, TerminService } from "../../termin.service";
 
 interface FormularModell {
-    person: string;
     titel: string;
     beginn: string;
     ende: string;
@@ -14,7 +13,7 @@ interface FormularModell {
 }
 
 
-const LEERES_MODELL: FormularModell = {person: "", titel: "", beginn: "", ende: "", farbe: "" };
+const LEERES_MODELL: FormularModell = {titel: "", beginn: "", ende: "", farbe: "" };
 
 @Component({
     selector: "app-termin-formular",
@@ -41,6 +40,11 @@ export class TerminFormular {
     protected readonly nichtGefunden = computed(
         () => this.istBearbeiten() && !this.bearbeiteterTermin() && !this.terminService.termine.isLoading(),
     );
+    protected readonly ausgewaehltePersonen = linkedSignal<number[]>(() => {
+        const t = this.bearbeiteterTermin();
+        return t ? t.person_ids : [];
+    });
+    protected readonly personenFehler = signal(false);
 
     private readonly modell = linkedSignal<FormularModell>(() => {
         const t = this.bearbeiteterTermin();
@@ -48,7 +52,6 @@ export class TerminFormular {
             return { ...LEERES_MODELL };
         }
         return {
-            person: String(t.person_id),
             titel: t.titel,
             beginn: t.datum_zeit.slice(0, 16),
             ende: t.ende_zeit.slice(0, 16),
@@ -59,7 +62,6 @@ export class TerminFormular {
     protected readonly formular = form(
         this.modell,
         (pfad) => {
-            required(pfad.person, { message: "Bitte wähle eine Person aus." });
             required(pfad.titel, { message: "Bitte gib dem Termin einen Titel." });
             required(pfad.beginn, { message: "Bitte gib einen Beginn an." });
             required(pfad.ende, { message: "Bitte gib ein Ende an." });
@@ -76,15 +78,20 @@ export class TerminFormular {
         {
             submission: {
                 action: async () => {
-                    this.serverFehler.set(null);
-                    const m = this.modell();
-                    const daten: NeuerTermin = {
-                        person_id: Number(m.person),
-                        titel: m.titel.trim(),
-                        datum_zeit: m.beginn,
-                        ende_zeit: m.ende,
-                        farbe: m.farbe as EreignisFarbe,
-                    };
+                this.serverFehler.set(null);
+                if (this.ausgewaehltePersonen().length === 0) {
+                    this.personenFehler.set(true);
+                    return;
+                }
+                this.personenFehler.set(false);
+                const m = this.modell();
+                const daten: NeuerTermin = {
+                    person_ids: this.ausgewaehltePersonen(),
+                    titel: m.titel.trim(),
+                    datum_zeit: m.beginn,
+                    ende_zeit: m.ende,
+                    farbe: m.farbe as EreignisFarbe,
+                };
                     const id = this.id();
                     try {
                         if (id === undefined) {
@@ -100,7 +107,12 @@ export class TerminFormular {
             },
         },
     );
-        
+    protected personUmschalten(id: number, ausgewaehlt: boolean): void {
+        this.ausgewaehltePersonen.update((alt) => (ausgewaehlt ? [...alt, id] : alt.filter((x) => x !== id)));
+        if (ausgewaehlt) {
+            this.personenFehler.set(false);
+        }
+    }
     protected async loeschen(): Promise<void> {
         const id = this.id();
         if (id === undefined) {

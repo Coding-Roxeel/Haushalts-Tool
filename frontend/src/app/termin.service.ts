@@ -7,7 +7,7 @@ const TERMINE_URL = "http://127.0.0.1:8000/termine";
 
 export interface Termin {
     id: number;
-    person_id: number;
+    person_ids: number[];
     titel: string;
     datum_zeit: string;
     ende_zeit: string;
@@ -16,7 +16,7 @@ export interface Termin {
 
 
 export interface NeuerTermin {
-    person_id: number;
+    person_ids: number[];
     titel: string;
     datum_zeit: string;
     ende_zeit: string;

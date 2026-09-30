@@ -86,19 +86,19 @@ export class KalenderSeite {
         }
 
         for (const t of this.terminService.termine.value()) {
-            if (!passt(t.person_id)) {
+            if (!t.person_ids.some(passt)) {
                 continue;
             }
-            const personName = namen.get(t.person_id) ?? "?";
+            const namenListe = t.person_ids.map((id) => namen.get(id) ?? "?");
             const startTag = t.datum_zeit.slice(0, 10);
             const endeTag = t.ende_zeit.slice(0, 10);
             let tag = startTag;
             for (let n = 0; tag <= endeTag && n < 62; n++) {
                 hinzu(tag, {
                     art: "termin",
-                    id:t.id,
-                    personName,
-                    wer: personName.slice(0, 1),
+                    id: t.id,
+                    personName: namenListe.join(", "),
+                    wer: namenListe.map((name) => name.slice(0, 1)).join("/"),
                     titel: t.titel,
                     kurz: t.titel,
                     farbe: t.farbe,
@@ -108,6 +108,7 @@ export class KalenderSeite {
                 tag = tagPlus(tag, 1);
             }
         }
+
 
         for (const liste of karte.values()) {
             liste.sort((a,b) => a.zeit.localeCompare(b.zeit));

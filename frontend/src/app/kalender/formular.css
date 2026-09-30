@@ -291,3 +291,46 @@ button.abbrechen {
     font-size: 0.8rem;
     color: var(--text-2);
 }
+
+.personen-auswahl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.person-option {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    background: var(--flaeche);
+    border: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+        color var(--dauer-schweben) var(--ease-schweben),
+        background var(--dauer-schweben) var(--ease-schweben),
+        border-color var(--dauer-schweben) var(--ease-schweben);
+}
+
+.person-option input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.person-option:has(input:checked) {
+    color: var(--akzent-text);
+    background: var(--akzent);
+    border-color: var(--akzent);
+}
+
+.person-option:has(input:focus-visible) {
+    outline: 2px solid var(--akzent);
+    outline-offset: 2px;
+}

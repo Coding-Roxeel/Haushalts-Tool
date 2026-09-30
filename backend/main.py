@@ -77,13 +77,16 @@ def list_schichten(db:Session = Depends(get_db)):
     return db.query(models.Schicht).all()
 
 @app.post("/termine", response_model=schemas.TerminOut)
-def create_termin(termin: schemas.TerminCreate, db: Session = Depends(get_db)):
+def create_termin(termin:schemas.TerminCreate, db: Session = Depends(get_db)):
+    personen = db.query(models.Person).filter(models.Person.id.in_(termin.person_ids)).all()
+    if len(personen) != len(set(termin.person_ids)):
+        raise HTTPException(status_code=400, detail="Ungültige person_ids")
     neuer_termin = models.Termin(
-        person_id=termin.person_id,
         titel=termin.titel,
-        ende_zeit=termin.ende_zeit,
         datum_zeit=termin.datum_zeit,
+        ende_zeit=termin.ende_zeit,
         farbe=termin.farbe,
+        personen=personen,
     )
     db.add(neuer_termin)
     db.commit()
@@ -112,10 +115,21 @@ def delete_person(person_id: int, cascade: bool = False, db: Session = Depends(g
         raise HTTPException(status_code=404, detail="Person nicht gefunden")
     if cascade:
         db.query(models.Schicht).filter(models.Schicht.person_id == person_id).delete()
-        db.query(models.Termin).filter(models.Termin.person_id == person_id).delete()
+        betroffene_termine = (
+            db.query(models.Termin)
+            .join(models.termin_personen)
+            .filter(models.termin_personen.c.person_id == person_id)
+            .all()
+        )
+        for termin in betroffene_termine:
+            termin.personen.remove(db_person)
+        db.flush()
+        for termin in betroffene_termine:
+            if not termin.personen:
+                db.delete(termin)
         db.delete(db_person)
         db.commit()
-        return {"message": "Person inkl. zugehöriger Schichten/Termine gelöscht"}
+        return {"message": "Person inkl zugehöriger Schichten/Termine gelöscht"}
     try:
         db.delete(db_person)
         db.commit()
@@ -188,16 +202,15 @@ def update_termin(termin_id: int, termin: schemas.TerminCreate, db: Session = De
     db_termin = db.query(models.Termin).filter(models.Termin.id == termin_id).first()
     if db_termin is None:
         raise HTTPException(status_code=404, detail="Termin nicht gefunden")
-    db_termin.person_id = termin.person_id
+    personen = db.query(models.Person).filter(models.Person.id.in_(termin.person_ids)).all()
+    if len(personen) != len(set(termin.person_ids)):
+        raise HTTPException(status_code=400, detail="Ungültige person_ids")
     db_termin.titel = termin.titel
     db_termin.datum_zeit = termin.datum_zeit
     db_termin.ende_zeit = termin.ende_zeit
     db_termin.farbe = termin.farbe
-    try:
-        db.commit()
-    except IntegrityError:
-        db.rollback()
-        raise HTTPException(status_code=400, detail="Ungültige person_id")
+    db_termin.personen = personen
+    db.commit()
     db.refresh(db_termin)
     return db_termin
 

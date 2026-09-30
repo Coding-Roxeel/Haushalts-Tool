@@ -236,7 +236,7 @@ export class PersonKarte {
       
         const terminEreignisse = this.terminService.termine
         .value()
-        .filter((t) => t.person_id === personId)
+        .filter((t) => t.person_ids.includes(personId))
         .flatMap((t) => {
           const start = this.datumZeitZuMinuten(t.datum_zeit);
           const ende = this.datumZeitZuMinuten(t.ende_zeit);

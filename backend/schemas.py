@@ -61,7 +61,7 @@ class SchichtOut(BaseModel):
         from_attributes = True
 
 class TerminCreate(BaseModel):
-    person_id: int
+    person_ids: list[int] = Field(min_length=1)
     titel: str
     datum_zeit: datetime
     ende_zeit: datetime
@@ -69,7 +69,7 @@ class TerminCreate(BaseModel):
 
 class TerminOut(BaseModel):
     id: int
-    person_id: int
+    person_ids: list[int]
     titel: str
     datum_zeit: datetime
     ende_zeit: datetime
