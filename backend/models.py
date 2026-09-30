@@ -20,7 +20,8 @@ class SchichtVorlage(Base):
     ende = Column(Time, nullable=False)
     kuerzel = Column(String, nullable=True)
     farbe = Column(String, nullable=False)
-
+    person_id = Column(Integer, ForeignKey("personen.id", ondelete="SET NULL"), nullable=True)
+    
 class Schicht(Base):
     __tablename__ = "schichten"
 

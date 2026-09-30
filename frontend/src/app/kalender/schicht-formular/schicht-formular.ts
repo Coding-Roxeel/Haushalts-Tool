@@ -69,6 +69,13 @@ export class SchichtFormular {
         return m.start !== "" && m.ende !== "" && m.ende < m.start;
     });
 
+    protected readonly gefilterteVorlagen = computed(() => {
+        const person = this.modell().person;
+        return this.vorlagenService.schichtVorlagen.value().filter(
+            (v) => v.person_id === null || v.person_id === Number(person),
+        );
+    });
+
     protected readonly formular = form(
         this.modell,
         (pfad) => {

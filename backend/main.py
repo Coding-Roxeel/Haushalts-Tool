@@ -39,12 +39,15 @@ def list_personen(db: Session = Depends(get_db)):
 
 @app.post("/schicht-vorlagen", response_model=schemas.SchichtVorlageOut)
 def create_schicht_vorlage(vorlage: schemas.SchichtVorlageCreate, db: Session = Depends(get_db)):
+    if vorlage.person_id is not None and db.query(models.Person).filter(models.Person.id == vorlage.person_id).first() is None:
+        raise HTTPException(status_code=400, detail="Ungültige person_id")
     neue_vorlage = models.SchichtVorlage(
         name=vorlage.name,
         start=vorlage.start,
         ende=vorlage.ende,
         kuerzel=vorlage.kuerzel,
         farbe=vorlage.farbe,
+        person_id=vorlage.person_id,
     )
     db.add(neue_vorlage)
     db.commit()
@@ -144,11 +147,14 @@ def update_schicht_vorlage(vorlage_id: int, vorlage: schemas.SchichtVorlageCreat
     db_vorlage = db.query(models.SchichtVorlage).filter(models.SchichtVorlage.id == vorlage_id).first()
     if db_vorlage is None:
         raise HTTPException(status_code=404, detail="Schicht-Vorlage nicht gefunden")
+    if vorlage.person_id is not None and db.query(models.Person).filter(models.Person.id == vorlage.person_id).first() is None:
+        raise HTTPException(status_code=400, detail="Ungültige person_id")
     db_vorlage.name = vorlage.name
     db_vorlage.start = vorlage.start
     db_vorlage.ende = vorlage.ende
     db_vorlage.kuerzel = vorlage.kuerzel
     db_vorlage.farbe = vorlage.farbe
+    db_vorlage.person_id = vorlage.person_id
     db.commit()
     db.refresh(db_vorlage)
     return db_vorlage

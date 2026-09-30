@@ -14,6 +14,7 @@ export interface SchichtVorlage {
     ende: string;
     kuerzel: string | null;
     farbe: string;
+    person_id: number | null;
 }
 
 export interface NeueSchichtVorlage {
@@ -22,6 +23,7 @@ export interface NeueSchichtVorlage {
     ende: string;
     kuerzel: string | null;
     farbe: EreignisFarbe;
+    person_id: number | null;
 }
 
 @Service()

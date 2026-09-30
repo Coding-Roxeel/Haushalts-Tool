@@ -24,6 +24,8 @@ class SchichtVorlageCreate(BaseModel):
     ende: time
     kuerzel: Optional[str] = None
     farbe: Ereignisfarbe
+    person_id: Optional[int] = None
+
 
 class SchichtVorlageOut(BaseModel):
     id: int
@@ -32,7 +34,8 @@ class SchichtVorlageOut(BaseModel):
     ende: time 
     kuerzel: Optional[str] = None
     farbe: str
-
+    person_id: Optional[int] = None
+    
     class Config:
         from_attributes = True
 

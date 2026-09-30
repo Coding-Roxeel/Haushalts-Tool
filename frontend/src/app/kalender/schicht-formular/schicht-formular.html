@@ -37,7 +37,7 @@
         <label for="vorlage">Vorlage (optional)</label>
         <select id="vorlage" [formField]="formular.vorlage" (change)="vorlageGewaehlt()">
             <option value="">Ohne Vorlage</option>
-            @for (vorlage of vorlagenService.schichtVorlagen.value(); track vorlage.id) {
+            @for (vorlage of gefilterteVorlagen(); track vorlage.id) {
                 <option [value]="vorlage.id">{{ vorlage.name }}</option>
             }
         </select>

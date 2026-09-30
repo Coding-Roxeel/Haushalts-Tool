@@ -51,6 +51,16 @@
         }
     </div>
 
+    <div class="feld">
+        <label for="person">Person (optional)</label>
+        <select id="person" [formField]="formular.person">
+            <option value="">Für alle</option>
+            @for (person of personService.personen.value(); track person.id) {
+                <option [value]="person.id">{{ person.name }}</option>
+            }
+        </select>
+    </div>
+
     <fieldset class="feld farben">
         <legend>Farbe</legend>
         <div class="farb-auswahl">

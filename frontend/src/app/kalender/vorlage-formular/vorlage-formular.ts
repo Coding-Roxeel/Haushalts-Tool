@@ -3,6 +3,7 @@ import { Router, RouterLink } from "@angular/router";
 import { form, FormField, FormRoot, maxLength, required, validate } from "@angular/forms/signals";
 import { EREIGNIS_FARBEN, EreignisFarbe, farbeVar } from "../../farben";
 import { NeueSchichtVorlage, SchichtVorlageService } from "../../schicht-vorlage.service";
+import { PersonService } from "../../person.service";
 
 
 interface VorlageModell {
@@ -11,9 +12,10 @@ interface VorlageModell {
     ende: string;
     kuerzel: string;
     farbe: string;
+    person: string;
 }
 
-const LEERES_MODELL: VorlageModell = { name: "", start: "", ende: "", kuerzel: "", farbe: "" };
+const LEERES_MODELL: VorlageModell = { name: "", start: "", ende: "", kuerzel: "", farbe: "", person: "" };
 
 @Component({
     selector: "app-vorlage-formular",
@@ -26,6 +28,7 @@ export class VorlageFormular {
 
     private readonly router = inject(Router);
     private readonly vorlagenService = inject(SchichtVorlageService);
+    protected readonly personService = inject(PersonService);
     protected readonly farben = EREIGNIS_FARBEN;
     protected readonly farbeVar = farbeVar;
     protected readonly serverFehler = signal<string | null>(null);
@@ -51,6 +54,7 @@ export class VorlageFormular {
             ende: v.ende.slice(0, 5),
             kuerzel: v.kuerzel ?? "",
             farbe: v.farbe,
+            person: v.person_id === null ? "" : String(v.person_id)
         };
     });
 
@@ -85,6 +89,7 @@ export class VorlageFormular {
                         ende: m.ende,
                         kuerzel: m.kuerzel.trim() === "" ? null : m.kuerzel.trim(),
                         farbe: m.farbe as EreignisFarbe,
+                        person_id: m.person === "" ? null : Number(m.person),
                     };
                     const id = this.id();
                     try {

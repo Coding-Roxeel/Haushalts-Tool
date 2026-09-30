@@ -11,6 +11,9 @@
                     @if (vorlage.kuerzel) {
                         <span class="kuerzel">{{ vorlage.kuerzel }}</span>
                     }
+                    @if (vorlage.person_id !== null) {
+                        <span class="person">{{ personName(vorlage.person_id) }}</span>
+                    }
                     <span class="zeiten">{{ vorlage.start.slice(0, 5) }} - {{ vorlage.ende.slice(0, 5) }} Uhr</span>
                 </a>
             </li>
