@@ -315,3 +315,101 @@ select {
     outline: 2px solid var(--akzent);
     outline-offset: 2px;
 }
+
+
+.ansicht-umschalter {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.2rem;
+    background: var(--flaeche);
+    border: 1px solid color-mix(in srgb, var(--text) 18%, transparent);
+    border-radius: var(--radius-klein);
+}
+
+.ansicht-umschalter button {
+    padding: 0.3rem 0.75rem;
+    font: inherit;
+    font-weight: 700;
+    color: var(--text-2);
+    background: none;
+    border: none;
+    border-radius: calc(var(--radius-klein) - 2px);
+    cursor: pointer;
+}
+
+.ansicht-umschalter button.aktiv {
+    color: var(--akzent-text);
+    background: var(--akzent);
+}
+
+.ansicht-umschalter button:focus-visible {
+    outline: 2px solid var(--akzent);
+    outline-offset: 2px;
+}
+
+.matrix-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--rand);
+    border-radius: var(--radius-klein);
+}
+
+.matrix {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.matrix th,
+.matrix td {
+    padding: 0.35rem 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--rand);
+}
+
+.matrix thead th {
+    font-size: 0.7rem;
+    color: var(--text-2);
+}
+
+.matrix-wochentag {
+    display: block;
+    font-weight: 700;
+}
+
+.matrix-tag {
+    display: block;
+    font-variant-numeric: tabular-nums;
+}
+
+.matrix th.heute,
+.matrix td.heute {
+    background: color-mix(in srgb, var(--akzent) 10%, transparent);
+}
+
+.matrix-ecke,
+.matrix-person {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--glas);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.matrix-person {
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.matrix-zelle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.6rem;
+    padding: 0.1rem 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text);
+    background: color-mix(in srgb, var(--farbe) 24%, transparent);
+    border-left: 3px solid var(--farbe);
+    border-radius: 6px;
+}

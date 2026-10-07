@@ -26,6 +26,12 @@ interface Zelle {
     eintraege: Eintrag[];
 }
 
+interface MatrixZelle {
+    kurz: string;
+    farbe: string;
+    titel: string;
+}
+
 const WOCHENTAGE = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 const MAX_CHIPS = 3;
 
@@ -51,6 +57,7 @@ export class KalenderSeite {
     protected readonly monat = signal(ersterDesMonats(new Date()));
     protected readonly personFilter = signal("");
     protected readonly ausgewaehlterTag = signal<string | null>(null);
+    protected readonly ansicht = signal<"monat" | "matrix">("monat");
 
     protected readonly monatText = computed(() =>
         new Intl.DateTimeFormat("de-DE", { month: "long", year: "numeric" }).format(this.monat()),
@@ -167,6 +174,38 @@ export class KalenderSeite {
         }
         return params;
     });
+
+    protected readonly matrixTage = computed(() => {
+        const erster = this.monat();
+        const letzter = new Date(erster.getFullYear(), erster.getMonth() +1, 0);
+        const heute = datumText(new Date());
+        return Array.from({ length: letzter.getDate() }, (_, i) => {
+            const d = new Date(erster.getFullYear(), erster.getMonth(), i + 1);
+            const datum = datumText(d);
+            return {
+                datum,
+                tag: i + 1,
+                wochentag: WOCHENTAGE[(d.getDay() +6) % 7],
+                heute: datum === heute,
+            };
+        });
+    });
+
+    private readonly matrixZellen = computed(() => {
+        const karte = new Map<string, MatrixZelle>();
+        for (const s of this.schichtService.schichten.value()) {
+            const zelle: MatrixZelle = {kurz: s.kuerzel ?? s.titel.slice(0, 1), farbe: s.farbe, titel: s.titel };
+            karte.set(`${s.person_id}|${s.datum}`, zelle);
+            if (s.ende < s.start) {
+                karte.set(`${s.person_id}|${tagPlus(s.datum, 1)}`, zelle);
+            }
+        }
+        return karte;   
+    });
+
+    protected matrixZelle(personId: number, datum: string): MatrixZelle | undefined {
+        return this.matrixZellen().get(`${personId}|${datum}`);
+    }
 
     protected monatWechseln(schritt: number): void {
         const m = this.monat();

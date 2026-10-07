@@ -8,6 +8,11 @@
         <button type="button" class="heute-knopf" (click)="zuHeute()">Heute</button>
     </div>
 
+    <div class="ansicht-umschalter" role="group" aria-label="Ansicht wählen">
+        <button type="button" [class.aktiv]="ansicht() === 'monat'" (click)="ansicht.set('monat')">Monat</button>
+        <button type="button" [class.aktiv]="ansicht() === 'matrix'" (click)="ansicht.set('matrix')">Matrix</button>
+    </div>
+
     <div class="filter">
         <label for="person-filter">Person</label>
         <select id="person-filter" [value]="personFilter()" (change)="personFilter.set($any($event.target).value)">
@@ -19,67 +24,99 @@
     </div>
 </div>
 
-<div class="raster" role="grid" aria-label="Monatskalender">
-    @for (name of wochentage; track name) {
-        <div class="kopfzelle" role="columnheader"> {{ name }}</div>
-    }
-    @for (zelle of zellen(); track zelle.datum) {
-        <div 
-            class="zelle"
-            role="gridcell"
-            tabindex="0"
-            [class.ausserhalb]="!zelle.imMonat"
-            [class.heute]="zelle.heute"
-            [class.ausgewaehlt]="zelle.datum === ausgewaehlterTag()"
-            (click)="tagAuswaehlen(zelle.datum)"
-            (keydown.enter)="tagAuswaehlen(zelle.datum)"    
-        >
-            <span class="tag">{{ zelle.tag }}</span>
-            @for(e of zelle.eintraege.slice(0, maxChips); track e.art + e.id) {
-                <span
-                    class="chip"
-                    [class.termin]="e.art === 'termin'"
-                    [class.fortsetzung]="e.fortsetzung"
-                    [style.--farbe]="farbeVar(e.farbe)"
-                    [attr.title]="e.personName + ': ' + e.titel + ' ' + e.zeit"
-                    >
-                    <span class="wer">{{ e.wer }}</span>
-                    <span class="kurz">{{ e.kurz }}</span>
-                </span>
-            }
-            @if (zelle.eintraege.length > maxChips) {
-                <span class="mehr">+ {{ zelle.eintraege.length - maxChips }}</span>
-            }
-        </div>
-    }
-</div>
-
-@if (ausgewaehlterTag() !== null) {
-    <div class="tagesliste">
-        <div class="tagesliste-kopf">
-            <h2>{{ ausgewaehlterTagText() }}</h2>
-            <button type="button" class="schliessen" aria-label="Tagesliste schließen" (click)="ausgewaehlterTag.set(null)">&times;</button>
-        </div>
-
-        @if (eintraegeAusgewaehlterTag().length > 0) {
-            <ul class="tagesliste-eintraege">
-                @for (e of eintraegeAusgewaehlterTag(); track e.art + e.id) {
-                    <li>
-                        <a class="tagesliste-eintrag" [routerLink]="['/kalender', e.art, e.id]" [style.--farbe]="farbeVar(e.farbe)">
-                            <span class="titel">{{ e.titel }}</span>
-                            <span class="person">{{ e.personName }}</span>
-                            <span class="zeit">{{ e.zeit }}</span>
-                        </a>
-                    </li>
-                }
-            </ul>
-        } @else {
-            <p class="leer">An diesem Tag ist noch nichts eingetragen.</p>
+@if (ansicht() === 'monat') {
+    <div class="raster" role="grid" aria-label="Monatskalender">
+        @for (name of wochentage; track name) {
+            <div class="kopfzelle" role="columnheader"> {{ name }}</div>
         }
+        @for (zelle of zellen(); track zelle.datum) {
+            <div 
+                class="zelle"
+                role="gridcell"
+                tabindex="0"
+                [class.ausserhalb]="!zelle.imMonat"
+                [class.heute]="zelle.heute"
+                [class.ausgewaehlt]="zelle.datum === ausgewaehlterTag()"
+                (click)="tagAuswaehlen(zelle.datum)"
+                (keydown.enter)="tagAuswaehlen(zelle.datum)"    
+            >
+                <span class="tag">{{ zelle.tag }}</span>
+                @for(e of zelle.eintraege.slice(0, maxChips); track e.art + e.id) {
+                    <span
+                        class="chip"
+                        [class.termin]="e.art === 'termin'"
+                        [class.fortsetzung]="e.fortsetzung"
+                        [style.--farbe]="farbeVar(e.farbe)"
+                        [attr.title]="e.personName + ': ' + e.titel + ' ' + e.zeit"
+                        >
+                        <span class="wer">{{ e.wer }}</span>
+                        <span class="kurz">{{ e.kurz }}</span>
+                    </span>
+                }
+                @if (zelle.eintraege.length > maxChips) {
+                    <span class="mehr">+ {{ zelle.eintraege.length - maxChips }}</span>
+                }
+            </div>
+        }
+    </div>
 
-        <div class="tagesliste-knoepfe">
-            <a class="neu" [routerLink]="'/kalender/schicht-neu'" [queryParams]="neuQueryParams()">Neue Schicht</a>
-            <a class="neu" [routerLink]="'/kalender/termin-neu'" [queryParams]="neuQueryParams()">Neuer Termin</a>
+    @if (ausgewaehlterTag() !== null) {
+        <div class="tagesliste">
+            <div class="tagesliste-kopf">
+                <h2>{{ ausgewaehlterTagText() }}</h2>
+                <button type="button" class="schliessen" aria-label="Tagesliste schließen" (click)="ausgewaehlterTag.set(null)">&times;</button>
+            </div>
+
+            @if (eintraegeAusgewaehlterTag().length > 0) {
+                <ul class="tagesliste-eintraege">
+                    @for (e of eintraegeAusgewaehlterTag(); track e.art + e.id) {
+                        <li>
+                            <a class="tagesliste-eintrag" [routerLink]="['/kalender', e.art, e.id]" [style.--farbe]="farbeVar(e.farbe)">
+                                <span class="titel">{{ e.titel }}</span>
+                                <span class="person">{{ e.personName }}</span>
+                                <span class="zeit">{{ e.zeit }}</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            } @else {
+                <p class="leer">An diesem Tag ist noch nichts eingetragen.</p>
+            }
+
+            <div class="tagesliste-knoepfe">
+                <a class="neu" [routerLink]="'/kalender/schicht-neu'" [queryParams]="neuQueryParams()">Neue Schicht</a>
+                <a class="neu" [routerLink]="'/kalender/termin-neu'" [queryParams]="neuQueryParams()">Neuer Termin</a>
+            </div>
         </div>
+    }
+} @else {
+    <div class="matrix-wrapper">
+        <table class="matrix" role="grid" aria-label="Dienstplan-Matrix">
+            <thead>
+                <tr>
+                    <th class="matrix-ecke" scope="col">Person</th>
+                    @for (tag of matrixTage(); track tag.datum) {
+                        <th scope="col" [class.heute]="tag.heute">
+                            <span class="matrix-wochentag">{{ tag.wochentag }}</span>
+                            <span class="matrix-tag">{{ tag.tag }}</span>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (person of personService.personen.value(); track person.id) {
+                    <tr>
+                        <th scope="row" class="matrix-person">{{ person.name }}</th>
+                        @for (tag of matrixTage(); track tag.datum) {
+                            <td [class.heute]="tag.heute">
+                                @if (matrixZelle(person.id, tag.datum); as zelle) {
+                                    <span class="matrix-zelle" [style.--farbe]="farbeVar(zelle.farbe)" [attr.title]="person.name + ': ' + zelle.titel">{{ zelle.kurz }}</span>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 }
