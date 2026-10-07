@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { farbeVar } from "../../farben";
 import { datumText, tagPlus } from "../../dashboard/datum";
 import { PersonService } from "../../person.service";
@@ -34,6 +35,7 @@ function ersterDesMonats(datum: Date): Date {
 
 @Component({
     selector: "app-kalender-seite",
+    imports: [RouterLink],
     templateUrl: "./kalender-seite.html",
     styleUrl: "./kalender-seite.css",
 })
@@ -48,6 +50,7 @@ export class KalenderSeite {
 
     protected readonly monat = signal(ersterDesMonats(new Date()));
     protected readonly personFilter = signal("");
+    protected readonly ausgewaehlterTag = signal<string | null>(null);
 
     protected readonly monatText = computed(() =>
         new Intl.DateTimeFormat("de-DE", { month: "long", year: "numeric" }).format(this.monat()),
@@ -137,6 +140,34 @@ export class KalenderSeite {
         });
     });
 
+    protected readonly eintraegeAusgewaehlterTag = computed(() => {
+        const tag = this.ausgewaehlterTag();
+        return tag === null ? [] : (this.eintraegeProTag().get(tag) ?? []);
+    });
+
+    protected readonly ausgewaehlterTagText = computed(() => {
+        const tag = this.ausgewaehlterTag();
+        if (tag === null) {
+            return "";
+        }
+        const [jahr, monat, tagImMonat] = tag.split("-").map(Number);
+        return new Intl.DateTimeFormat("de-DE", { weekday: "long", day: "numeric", month: "long" }).format(
+            new Date(jahr, monat -1, tagImMonat),
+        );
+    });
+
+    protected readonly neuQueryParams = computed(() => {
+        const params: Record<string, string> ={};
+        const tag = this.ausgewaehlterTag();
+        if (tag !== null) {
+            params["datum"] = tag;
+        }
+        if (this.personFilter() !== "") {
+            params["person"] = this.personFilter();
+        }
+        return params;
+    });
+
     protected monatWechseln(schritt: number): void {
         const m = this.monat();
         this.monat.set(new Date(m.getFullYear(), m.getMonth() + schritt, 1));
@@ -144,5 +175,9 @@ export class KalenderSeite {
 
     protected zuHeute(): void {
         this.monat.set(ersterDesMonats(new Date()));
+    }
+
+    protected tagAuswaehlen(datum: string): void {
+        this.ausgewaehlterTag.update((aktuell) => (aktuell === datum ? null : datum));
     }
 }

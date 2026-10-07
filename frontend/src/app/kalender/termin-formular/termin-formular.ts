@@ -23,6 +23,8 @@ const LEERES_MODELL: FormularModell = {titel: "", beginn: "", ende: "", farbe: "
 })
 export class TerminFormular {
     readonly id = input<string>();
+    readonly datum = input<string>();
+    readonly person = input<string>();
 
     private readonly router = inject(Router);
     private readonly terminService = inject(TerminService);
@@ -42,14 +44,19 @@ export class TerminFormular {
     );
     protected readonly ausgewaehltePersonen = linkedSignal<number[]>(() => {
         const t = this.bearbeiteterTermin();
-        return t ? t.person_ids : [];
+        if (t) {
+        return t.person_ids;
+        }
+        const person = this.person();
+        return person === undefined ? [] : [Number(person)];
     });
     protected readonly personenFehler = signal(false);
 
     private readonly modell = linkedSignal<FormularModell>(() => {
         const t = this.bearbeiteterTermin();
         if (!t) {
-            return { ...LEERES_MODELL };
+            const datum = this.datum();
+            return datum === undefined ? { ...LEERES_MODELL } : { ...LEERES_MODELL, beginn: `${datum}T00:00`, ende: `${datum}T00:00` };
         }
         return {
             titel: t.titel,

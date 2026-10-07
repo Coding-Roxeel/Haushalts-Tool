@@ -28,6 +28,8 @@ const LEERES_MODELL: SchichtModell = { person: "", datum: "", vorlage: "", titel
 })
 export class SchichtFormular {
     readonly id = input<string>();
+    readonly datum = input<string>();
+    readonly person = input<string>();
 
     private readonly router = inject(Router);
     private readonly schichtService = inject(SchichtService);
@@ -50,7 +52,11 @@ export class SchichtFormular {
     private readonly modell = linkedSignal<SchichtModell>(() => {
         const s = this.bearbeiteteSchicht();
         if (!s) {
-            return { ...LEERES_MODELL };
+            return {
+                ...LEERES_MODELL,
+                datum: this.datum() ?? "",
+                person: this.person() ?? "",
+            };
         }
         return {
             person: String(s.person_id),

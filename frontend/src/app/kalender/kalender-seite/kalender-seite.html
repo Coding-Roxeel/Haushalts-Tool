@@ -24,7 +24,16 @@
         <div class="kopfzelle" role="columnheader"> {{ name }}</div>
     }
     @for (zelle of zellen(); track zelle.datum) {
-        <div class="zelle" role="gridcell" [class.ausserhalb]="!zelle.imMonat" [class.heute]="zelle.heute">
+        <div 
+            class="zelle"
+            role="gridcell"
+            tabindex="0"
+            [class.ausserhalb]="!zelle.imMonat"
+            [class.heute]="zelle.heute"
+            [class.ausgewaehlt]="zelle.datum === ausgewaehlterTag()"
+            (click)="tagAuswaehlen(zelle.datum)"
+            (keydown.enter)="tagAuswaehlen(zelle.datum)"    
+        >
             <span class="tag">{{ zelle.tag }}</span>
             @for(e of zelle.eintraege.slice(0, maxChips); track e.art + e.id) {
                 <span
@@ -44,3 +53,33 @@
         </div>
     }
 </div>
+
+@if (ausgewaehlterTag() !== null) {
+    <div class="tagesliste">
+        <div class="tagesliste-kopf">
+            <h2>{{ ausgewaehlterTagText() }}</h2>
+            <button type="button" class="schliessen" aria-label="Tagesliste schließen" (click)="ausgewaehlterTag.set(null)">&times;</button>
+        </div>
+
+        @if (eintraegeAusgewaehlterTag().length > 0) {
+            <ul class="tagesliste-eintraege">
+                @for (e of eintraegeAusgewaehlterTag(); track e.art + e.id) {
+                    <li>
+                        <a class="tagesliste-eintrag" [routerLink]="['/kalender', e.art, e.id]" [style.--farbe]="farbeVar(e.farbe)">
+                            <span class="titel">{{ e.titel }}</span>
+                            <span class="person">{{ e.personName }}</span>
+                            <span class="zeit">{{ e.zeit }}</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        } @else {
+            <p class="leer">An diesem Tag ist noch nichts eingetragen.</p>
+        }
+
+        <div class="tagesliste-knoepfe">
+            <a class="neu" [routerLink]="'/kalender/schicht-neu'" [queryParams]="neuQueryParams()">Neue Schicht</a>
+            <a class="neu" [routerLink]="'/kalender/termin-neu'" [queryParams]="neuQueryParams()">Neuer Termin</a>
+        </div>
+    </div>
+}
