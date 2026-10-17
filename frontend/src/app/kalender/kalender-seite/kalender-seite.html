@@ -41,6 +41,7 @@
                 (keydown.enter)="tagAuswaehlen(zelle.datum)"    
             >
                 <span class="tag">{{ zelle.tag }}</span>
+                <div class="chips">
                 @for(e of zelle.eintraege.slice(0, maxChips); track e.art + e.id) {
                     <span
                         class="chip"
@@ -56,6 +57,7 @@
                 @if (zelle.eintraege.length > maxChips) {
                     <span class="mehr">+ {{ zelle.eintraege.length - maxChips }}</span>
                 }
+                </div>
             </div>
         }
     </div>
